@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "387438926643",
+    "project_id": "aviatoruz-91b70",
+    "storage_bucket": "aviatoruz-91b70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387438926643:android:a04f45a7cb1aa06244bc46",
+        "android_client_info": {
+          "package_name": "com.example.aviatoruz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH56xbX0hqz-BzVEh2Y-Jx7GGRQoY_NCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
