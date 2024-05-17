@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 
 class NetworkServiceMeteoTopic {
   static final DatabaseReference database = FirebaseDatabase.instance.ref();
@@ -34,6 +33,7 @@ class NetworkServiceMeteoTopic {
   static Future<List<MeteoTopicItem>> getItems(
       {required String parentPath}) async {
     List<MeteoTopicItem> list = [];
+
     final path = database.child(parentPath);
     DatabaseEvent databaseEvent = await path.once();
     var result = databaseEvent.snapshot.children;
@@ -41,7 +41,7 @@ class NetworkServiceMeteoTopic {
       list.add(
           MeteoTopicItem.fromJson(Map<String, dynamic>.from(e.value as Map)));
     }
-    debugPrint(list.toString());
+    print(list.length);
     return list;
   }
 

@@ -1,34 +1,21 @@
-import 'dart:io';
-
 class MeteoTopicItem {
-  String name;
-  File? image; // Fayl turida rasm
+  String? id;
+  late String title;
+  String? createdTime;
 
-  MeteoTopicItem({required this.name, this.image});
+  MeteoTopicItem({this.id, required this.title, this.createdTime});
 
-  // Factory method to convert from JSON
-  factory MeteoTopicItem.fromJson(Map<String, dynamic> json) {
-    return MeteoTopicItem(
-      name: json['name'],
-
-      // Image ni bu yerda o'qib olishingiz kerak emas, chunki
-      // ma'lumotlar bazasida rasmlar o'rnini korsatmaydi
-    );
+  MeteoTopicItem.fromJson(Map<String, dynamic> json) {
+    id = json["id"];
+    title = json["title"];
+    createdTime = json["createdTime"];
   }
 
-  set imageUrl(String imageUrl) {}
-
-  // Method to convert to JSON
   Map<String, dynamic> toJson() {
-    // Image ma'lumotlar bazasiga yuklab olinganligini belgilash uchun URL ni qo'shamiz, agar mavjud bo'lsa
-    Map<String, dynamic> json = {
-      'name': name,
-      // 'image' qismiga URL qo'shamiz, agar rasmda mavjud bo'lsa
-      if (image != null)
-        'image':
-            image, // imageUrl ni rasmda yuklab olish funksiyasidan qaytadigan joyga almashtiring
+    return {
+      "id": id,
+      "title": title,
+      "createdTime": createdTime,
     };
-
-    return json;
   }
 }

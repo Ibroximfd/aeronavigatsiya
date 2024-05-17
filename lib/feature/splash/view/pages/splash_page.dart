@@ -20,6 +20,7 @@ class SplashPage extends StatelessWidget {
       },
     );
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF),
       body: Center(
         child: LottieBuilder.asset(
           fit: BoxFit.cover,

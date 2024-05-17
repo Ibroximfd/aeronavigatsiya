@@ -97,6 +97,7 @@ class MyDrawer extends StatelessWidget {
                             (route) => false,
                           );
                           AuthService.isLoginIn = false;
+                        
                           debugPrint("${AuthService.isLoginIn}");
                         },
                         leading: const Icon(Icons.exit_to_app),

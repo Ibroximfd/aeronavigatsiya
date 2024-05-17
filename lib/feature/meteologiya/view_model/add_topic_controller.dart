@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:aviatoruz/core/constant/network_service_const.dart';
-import 'package:aviatoruz/feature/meteologiya/view/pages/meteologiya_page.dart';
-import 'package:aviatoruz/feature/meteologiya/view/widgets/meteo_controller.dart';
+import 'package:aviatoruz/core/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +30,15 @@ class AddTopicController with ChangeNotifier {
     } catch (e) {
       debugPrint('Error picking image: $e');
     }
+    notifyListeners();
+  }
+
+  //another way
+
+  File? selectedFile;
+
+  Future<void> getSelectedFile(BuildContext context) async {
+    selectedFile = await getImageFromGalley(context);
     notifyListeners();
   }
 }
