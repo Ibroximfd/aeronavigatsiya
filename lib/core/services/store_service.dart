@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class StorageService {
   static final ref = FirebaseStorage.instance.ref();
-
+  static late final String imageUrl;
   static Future<String> upload(
       {required String path, required File file}) async {
     final Reference reference = ref.child(path).child(

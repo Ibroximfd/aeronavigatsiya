@@ -39,7 +39,7 @@ class NetworkServiceMeteoTopic {
     var result = databaseEvent.snapshot.children;
     for (var e in result) {
       list.add(
-          MeteoTopicItem.fromJson(Map<String, dynamic>.from(e.value as Map)));
+          MeteoTopicItem.fromMap(Map<String, dynamic>.from(e.value as Map)));
     }
     print(list.length);
     return list;
@@ -48,8 +48,8 @@ class NetworkServiceMeteoTopic {
   // UPDATE (Yangilash)
   static Future<void> updateItem(
       String id, MeteoTopicItem newItem, String path) async {
-    await database.child('$path/$id').update(newItem.toJson());
-    await database.child('$path/$id').update(newItem.toJson());
+    await database.child('$path/$id').update(newItem.toMap());
+    await database.child('$path/$id').update(newItem.toMap());
   }
 
   // DELETE (O'chirish)

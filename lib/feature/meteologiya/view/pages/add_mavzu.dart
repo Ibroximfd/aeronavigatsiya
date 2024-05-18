@@ -13,8 +13,8 @@ class ADDMavzu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(addTopicController);
     var con = ref.read(addTopicController);
-    ref.watch(meteoTopicNotifier);
-    var conMeteo = ref.read(meteoTopicNotifier);
+    ref.watch(meteoTopicProvider);
+    var conMeteo = ref.read(meteoTopicProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFFFFFFF),
@@ -90,16 +90,30 @@ class ADDMavzu extends ConsumerWidget {
                   //     con.nameContrl.clear();
                   //   },
                   // );
-                  conMeteo.uploadFile(
-                    con.image!,
-                  );
+                  // conMeteo.uploadFile(
+                  //   con.image!,
+                  // );
+
+                  // conMeteo
+                  //     .create(
+                  //         NetworkServiceConst.meteoTopicsName, con.nameContrl)
+                  //     .then(
+                  //       (value) => Navigator.pop(context),
+                  //     );
 
                   conMeteo
-                      .create(
-                          NetworkServiceConst.meteoTopicsName, con.nameContrl)
+                      .uplodItes(
+                    con.nameContrl.text,
+                    con.image!,
+                    "MeteoTopic",
+                    NetworkServiceConst.meteoTopicsImage,
+                    NetworkServiceConst.meteoTopicsName,
+                  )
                       .then(
-                        (value) => Navigator.pop(context),
-                      );
+                    (value) {
+                      Navigator.pop(context);
+                    },
+                  );
                 },
               ),
             ),

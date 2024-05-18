@@ -8,7 +8,9 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
-        slivers: [],
+        slivers: [
+          
+        ],
       ),
     );
   }
