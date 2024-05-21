@@ -10,12 +10,16 @@ String meteoTopicModelToJson(List<MeteoTopicItem> data) =>
 class MeteoTopicItem {
   String? id;
   String title;
+  String description;
   String imageUrl;
+  String imageUrlSecond;
 
   MeteoTopicItem({
     this.id,
     required this.title,
+    required this.description,
     required this.imageUrl,
+    required this.imageUrlSecond,
   });
 
   // Firebase'dan kelgan ma'lumotlarni konvertatsiya qilish uchun
@@ -23,7 +27,9 @@ class MeteoTopicItem {
     return MeteoTopicItem(
       id: data['id'],
       title: data['title'],
+      description: data['description'],
       imageUrl: data['imageUrl'],
+      imageUrlSecond: data['imageUrlSecond'],
     );
   }
 
@@ -32,7 +38,9 @@ class MeteoTopicItem {
     return {
       'id': id,
       'title': title,
+      'description': description,
       'imageUrl': imageUrl,
+      'imageUrlSecond': imageUrlSecond,
     };
   }
 }

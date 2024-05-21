@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:aviatoruz/core/constant/network_service_const.dart';
 import 'package:aviatoruz/core/services/rtdb_service.dart';
 import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
@@ -11,6 +12,7 @@ final meteoTopicProvider =
 class MeteoTopicNotifier extends ChangeNotifier {
   MeteoTopicNotifier() {
     initState();
+    notifyListeners();
   }
   void initState() {
     init();
@@ -24,6 +26,7 @@ class MeteoTopicNotifier extends ChangeNotifier {
         notifyListeners();
       },
     );
+    notifyListeners();
   }
 
   bool isLoading = false;
@@ -42,9 +45,28 @@ class MeteoTopicNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uplodItes(String title, File imageFile, String patternPath,
-      String imagePath, String path) async {
-    RTDBService.uploadItem(title, imageFile, patternPath, imagePath, path);
+  Future<void> uplodItes({
+    required String title,
+    required List<String> imageUrls,
+    required String patternPath,
+    required String imagePath,
+    required String imagePathSecond,
+    required String path,
+    required String description,
+    required File imageFile,
+    required File imageFileSecond,
+  }) async {
+    await RTDBService.uploadItem(
+      title: title,
+      imageUrls: imageUrls,
+      patternPath: patternPath,
+      imagePath: imagePath,
+      path: path,
+      description: description,
+      imagePathSecond: imagePathSecond,
+      imageFile: imageFile,
+      imageFileSecond: imageFileSecond,
+    );
     await fetchAllData();
     notifyListeners();
     print("Finished bro");

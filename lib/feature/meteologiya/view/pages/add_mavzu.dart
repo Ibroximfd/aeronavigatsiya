@@ -19,108 +19,174 @@ class ADDMavzu extends ConsumerWidget {
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
+        surfaceTintColor: const Color(0xFFFFFFFF),
         backgroundColor: const Color(0xFFFFFFFF),
         title: const Text("Add a new topic"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            GestureDetector(
-              onTap: () async {
-                try {
-                  con.getImage(ImageSource.gallery);
-                } catch (e) {
-                  debugPrint("Bomadi brat");
-                }
-              },
-              child: con.image == null
-                  ? Image.asset(
-                      "assets/images/add_image.png",
-                    )
-                  : Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () async {
+                  try {
+                    con.getImage(ImageSource.gallery);
+                  } catch (e) {
+                    debugPrint("Bomadi brat");
+                  }
+                },
+                child: con.image == null
+                    ? Image.asset(
+                        "assets/images/add_image.png",
+                      )
+                    : Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                          child: Image.file(
+                            con.image!,
+                            width: double.maxFinite,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      child: Image.file(
-                        con.image!,
-                        width: double.maxFinite,
-                        height: 280,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              "Topic name",
-              style: TextStyle(
-                fontSize: 18,
               ),
-            ),
-            TextFormField(
-              controller: con.nameContrl,
-              decoration: const InputDecoration(
-                label: Text("name"),
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            const Spacer(),
-            SizedBox(
-              height: 60,
-              width: double.maxFinite,
-              child: CupertinoButton(
-                color: Colors.blue,
-                child: const Text("Create"),
-                onPressed: () {
-                  // NetworkServiceMeteoTopic.create(
-                  //     dbPath: NetworkServiceConst.meteoTopicsName,
-                  //     data: {
-                  //       "name": con.nameContrl.text,
-                  //     }).then(
-                  //   (value) {
-                  //     Navigator.pop(context);
-                  //     con.nameContrl.clear();
-                  //   },
-                  // );
-                  // conMeteo.uploadFile(
-                  //   con.image!,
-                  // );
-
-                  // conMeteo
-                  //     .create(
-                  //         NetworkServiceConst.meteoTopicsName, con.nameContrl)
-                  //     .then(
-                  //       (value) => Navigator.pop(context),
-                  //     );
-
-                  conMeteo
-                      .uplodItes(
-                    con.nameContrl.text,
-                    con.image!,
-                    "MeteoTopic",
-                    NetworkServiceConst.meteoTopicsImage,
-                    NetworkServiceConst.meteoTopicsName,
-                  )
-                      .then(
-                    (value) {
-                      Navigator.pop(context);
-                    },
-                  );
+              const Text(
+                "Topic name",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextFormField(
+                controller: con.nameContrl,
+                style: const TextStyle(
+                  fontSize: 22,
+                ),
+                decoration: const InputDecoration(
+                  label: Text("name"),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () async {
+                  try {
+                    con.getImageSecond(ImageSource.gallery);
+                  } catch (e) {
+                    debugPrint("Bomadi brat");
+                  }
                 },
+                child: con.imageSecond == null
+                    ? Image.asset(
+                        "assets/images/add_image.png",
+                      )
+                    : Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                          child: Image.file(
+                            con.imageSecond!,
+                            width: double.maxFinite,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
               ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-          ],
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                "Topic Description",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 150,
+                width: double.maxFinite,
+                child: TextFormField(
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                  maxLines: null,
+                  controller: con.discCtrl,
+                  decoration: const InputDecoration(
+                      hintText: "Write a description",
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            12,
+                          ),
+                        ),
+                      )),
+                ),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              SizedBox(
+                height: 60,
+                width: double.maxFinite,
+                child: CupertinoButton(
+                  color: Colors.blue,
+                  child: const Text("Create"),
+                  onPressed: () {
+                    conMeteo
+                        .uplodItes(
+                      title: con.nameContrl.text,
+                      imageUrls: con.imageUrls,
+                      patternPath: "MeteoTopic",
+                      imagePath: NetworkServiceConst.meteoTopicsImage,
+                      imagePathSecond:
+                          NetworkServiceConst.meteoTopicsImageDetail,
+                      path: NetworkServiceConst.meteoTopicsName,
+                      description: con.discCtrl.text,
+                      imageFile: con.image!,
+                      imageFileSecond: con.imageSecond!,
+                    )
+                        .then(
+                      (value) {
+                        Navigator.pop(context);
+                        con.discCtrl.clear();
+                        con.nameContrl.clear();
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 40,),
+            ],
+          ),
         ),
       ),
     );

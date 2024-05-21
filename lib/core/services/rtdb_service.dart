@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:aviatoruz/core/constant/network_service_const.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class RTDBService {
   static DatabaseReference ref = FirebaseDatabase.instance.ref();
@@ -23,8 +23,17 @@ class RTDBService {
     return postList;
   }
 
-  static Future<void> uploadItem(String title, File imageFile,
-      String patternPath, String imagePath, String path) async {
+  static Future<void> uploadItem(
+      {required String title,
+      required List<String> imageUrls,
+      required String description,
+      required String patternPath,
+      required String imagePath,
+      required String imagePathSecond,
+      required String path,
+      required File imageFile,
+      required File imageFileSecond,
+      d}) async {
     // Upload file to Firebase Storage
     final storageRef = FirebaseStorage.instance.ref();
     String? key = ref.child(path).push().key;
@@ -35,11 +44,21 @@ class RTDBService {
     // Get file URL
     final imageUrl = await fileRef.getDownloadURL();
 
+    final String dateTime1 = DateTime.now().toString();
+    final image1FileRef = storageRef.child('$imagePathSecond/$dateTime1');
+    await image1FileRef.putFile(imageFileSecond);
+
+    // Get file URL
+    final imageUrlSecond = await image1FileRef.getDownloadURL();
+
     // Create model
+
     final newItem = MeteoTopicItem(
       id: key,
       title: title,
+      description: description,
       imageUrl: imageUrl,
+      imageUrlSecond: imageUrlSecond,
     );
 
     // Write to Realtime Database
