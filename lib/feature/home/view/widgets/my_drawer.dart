@@ -18,30 +18,12 @@ class MyDrawer extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  SizedBox(
-                    width: width * .48,
-                    child: const Text(
-                      "AVIATOR",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700,
-                        color: Color.fromARGB(255, 9, 107, 187),
-                        letterSpacing: 4,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    "UZ",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Color.fromARGB(255, 9, 107, 187),
-                    ),
-                  ),
-                ],
+              Center(
+                child: Image.asset(
+                  "assets/images/logo_aviator.png",
+                  height: 40,
+                  width: double.maxFinite,
+                ),
               ),
               const Divider(),
               const SizedBox(
@@ -97,7 +79,7 @@ class MyDrawer extends StatelessWidget {
                             (route) => false,
                           );
                           AuthService.isLoginIn = false;
-                        
+
                           debugPrint("${AuthService.isLoginIn}");
                         },
                         leading: const Icon(Icons.exit_to_app),

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:aviatoruz/core/constant/network_service_const.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,23 +8,20 @@ class RTDBService {
   static DatabaseReference ref = FirebaseDatabase.instance.ref();
 
   static Future<List<MeteoTopicItem>> getPosts(
-      String path, String meteoTopicsName) async {
+      String path, String topicsName) async {
     List<MeteoTopicItem> postList = [];
-    Query query = ref.child(path).child(NetworkServiceConst.meteoTopicsName);
+    Query query = ref.child(path).child(topicsName);
     DatabaseEvent databaseEvent = await query.once();
     Iterable<DataSnapshot> result = databaseEvent.snapshot.children;
     for (DataSnapshot e in result) {
-      if (e != null) {
-        postList.add(
-            MeteoTopicItem.fromMap(Map<String, dynamic>.from(e.value as Map)));
-      }
+      postList.add(
+          MeteoTopicItem.fromMap(Map<String, dynamic>.from(e.value as Map)));
     }
     return postList;
   }
 
   static Future<void> uploadItem(
       {required String title,
-      required List<String> imageUrls,
       required String description,
       required String patternPath,
       required String imagePath,

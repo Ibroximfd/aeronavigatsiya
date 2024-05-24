@@ -10,6 +10,17 @@ class AuthService {
 
   //current user
 
+  Future<User?> signInAnonymously() async {
+    try {
+      UserCredential result = await auth.signInAnonymously();
+      User? user = result.user;
+      return user;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   User? getCurrentUser() {
     return auth.currentUser;
   }

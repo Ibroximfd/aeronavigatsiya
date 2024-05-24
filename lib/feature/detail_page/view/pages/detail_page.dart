@@ -3,6 +3,7 @@ import 'package:aviatoruz/feature/detail_page/view_model/deteil_controller.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:photo_view/photo_view.dart';
 
 class DetailPage extends ConsumerWidget {
   final MeteoTopicItem item;
@@ -11,7 +12,6 @@ class DetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(detailNotifier);
-    var con = ref.read(detailNotifier);
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
@@ -31,16 +31,37 @@ class DetailPage extends ConsumerWidget {
                 ],
               ),
             ),
-            SizedBox(
-              width: double.maxFinite,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
-                ),
-                child: Image.network(
-                  item.imageUrl,
-                  fit: BoxFit.fitWidth,
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      child: Container(
+                        color: const Color(0xFFFFFFFF),
+                        height: 500,
+                        width: double.maxFinite,
+                        child: PhotoView(
+                          imageProvider: NetworkImage(item.imageUrl),
+                          minScale: PhotoViewComputedScale.contained,
+                          maxScale: PhotoViewComputedScale.covered * 2,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: SizedBox(
+                width: double.maxFinite,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                  ),
+                  child: Image.network(
+                    item.imageUrl,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
             ),
@@ -50,23 +71,42 @@ class DetailPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(left: 10, bottom: 20),
               child: Text(
-                item.title,
+                " ${item.title}",
                 style: GoogleFonts.aBeeZee(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(
-              width: double.maxFinite,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
-                ),
-                child: Image.network(
-                  item.imageUrlSecond,
-                  fit: BoxFit.fitWidth,
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      child: Container(
+                        color: const Color(0xFFFFFFFF),
+                        height: 500,
+                        width: double.maxFinite,
+                        child: PhotoView(
+                          imageProvider: NetworkImage(item.imageUrlSecond),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: SizedBox(
+                width: double.maxFinite,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                  ),
+                  child: Image.network(
+                    item.imageUrlSecond,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
             ),

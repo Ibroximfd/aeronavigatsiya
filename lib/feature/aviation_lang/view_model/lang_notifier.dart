@@ -6,11 +6,10 @@ import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final meteoTopicProvider =
-    ChangeNotifierProvider((ref) => MeteoTopicNotifier());
+final langTopicProvider = ChangeNotifierProvider((ref) => LangTopicNotifier());
 
-class MeteoTopicNotifier extends ChangeNotifier {
-  MeteoTopicNotifier() {
+class LangTopicNotifier extends ChangeNotifier {
+  LangTopicNotifier() {
     initState();
     notifyListeners();
   }
@@ -41,7 +40,7 @@ class MeteoTopicNotifier extends ChangeNotifier {
 
   Future<void> fetchAllData() async {
     _items = await RTDBService.getPosts(
-        "MeteoTopic", NetworkServiceConst.meteoTopicsName);
+        "LangTopic", NetworkServiceConst.langTopicsName);
     notifyListeners();
   }
 

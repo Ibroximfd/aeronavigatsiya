@@ -1,3 +1,4 @@
+import 'package:aviatoruz/feature/aviation_lang/view/pages/aviation_lang_page.dart';
 import 'package:aviatoruz/feature/chat/view/pages/chat_page.dart';
 import 'package:aviatoruz/feature/home/view/widgets/my_drawer.dart';
 import 'package:aviatoruz/feature/meteologiya/view/pages/meteologiya_page.dart';
@@ -37,31 +38,38 @@ class HomePage extends StatelessWidget {
           ),
           child: Column(
             children: [
+              // Center(
+              //   child: Stack(
+              //     alignment: Alignment.topRight,
+              //     children: [
+              //       SizedBox(
+              //         width: width * .6,
+              //         child: const Text(
+              //           "AVIATOR",
+              //           style: TextStyle(
+              //             fontSize: 40,
+              //             fontWeight: FontWeight.w700,
+              //             color: Color.fromARGB(255, 9, 107, 187),
+              //             letterSpacing: 4,
+              //           ),
+              //         ),
+              //       ),
+              //       const Text(
+              //         "UZ",
+              //         style: TextStyle(
+              //           fontSize: 20,
+              //           fontWeight: FontWeight.w700,
+              //           color: Color.fromARGB(255, 9, 107, 187),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Center(
-                child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    SizedBox(
-                      width: width * .6,
-                      child: const Text(
-                        "AVIATOR",
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.w700,
-                          color: Color.fromARGB(255, 9, 107, 187),
-                          letterSpacing: 4,
-                        ),
-                      ),
-                    ),
-                    const Text(
-                      "UZ",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Color.fromARGB(255, 9, 107, 187),
-                      ),
-                    ),
-                  ],
+                child: Image.asset(
+                  "assets/images/logo_aviator.png",
+                  height: 60,
+                  width: double.maxFinite,
                 ),
               ),
               const SizedBox(
@@ -83,7 +91,14 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const AviationLangPage(),
+                    ),
+                  );
+                },
                 child: Image.asset(
                   height: height * .24,
                   fit: BoxFit.cover,

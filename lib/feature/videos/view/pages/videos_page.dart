@@ -6,7 +6,9 @@ class VideosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFFFFFFF),
         shadowColor: const Color(0xFF000000),
         elevation: 2,
         surfaceTintColor: const Color(0xFFEEEEEE),

@@ -1,20 +1,21 @@
 import 'package:aviatoruz/core/constant/network_service_const.dart';
-import 'package:aviatoruz/feature/meteologiya/view_model/add_topic_controller.dart';
-import 'package:aviatoruz/feature/meteologiya/view_model/meteo_controller.dart';
+import 'package:aviatoruz/feature/auth/view_model/login_notifier.dart';
+import 'package:aviatoruz/feature/aviation_lang/view_model/add_lang_controller.dart';
+import 'package:aviatoruz/feature/aviation_lang/view_model/lang_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ADDMavzu extends ConsumerWidget {
-  const ADDMavzu({super.key});
+class AddMavzuLang extends ConsumerWidget {
+  const AddMavzuLang({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(addTopicController);
-    var con = ref.read(addTopicController);
-    ref.watch(meteoTopicProvider);
-    var conMeteo = ref.read(meteoTopicProvider);
+    ref.watch(addTopicLangController);
+    var con = ref.read(addTopicLangController);
+    ref.watch(loginNotifier);
+    var conMeteo = ref.read(langTopicProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFFFFFFF),
@@ -31,7 +32,7 @@ class ADDMavzu extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               const Text(
                 "Topic name",
@@ -41,7 +42,7 @@ class ADDMavzu extends ConsumerWidget {
                 ),
               ),
               TextFormField(
-                controller: con.nameContrl,
+                controller: con.nameContrlLang,
                 style: const TextStyle(
                   fontSize: 22,
                 ),
@@ -70,7 +71,7 @@ class ADDMavzu extends ConsumerWidget {
                     fontSize: 18,
                   ),
                   maxLines: null,
-                  controller: con.discCtrl,
+                  controller: con.discCtrlLang,
                   decoration: const InputDecoration(
                       hintText: "Write a description",
                       border: OutlineInputBorder(
@@ -84,17 +85,17 @@ class ADDMavzu extends ConsumerWidget {
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               GestureDetector(
                 onTap: () async {
                   try {
-                    con.getImageSecond(ImageSource.gallery);
+                    con.getImageLang(ImageSource.gallery);
                   } catch (e) {
                     debugPrint("Bomadi brat");
                   }
                 },
-                child: con.imageSecond == null
+                child: con.imageLang == null
                     ? Image.asset(
                         "assets/images/add_image.png",
                       )
@@ -109,7 +110,7 @@ class ADDMavzu extends ConsumerWidget {
                             Radius.circular(12),
                           ),
                           child: Image.file(
-                            con.imageSecond!,
+                            con.imageLang!,
                             width: double.maxFinite,
                             height: 200,
                             fit: BoxFit.cover,
@@ -123,12 +124,12 @@ class ADDMavzu extends ConsumerWidget {
               GestureDetector(
                 onTap: () async {
                   try {
-                    con.getImage(ImageSource.gallery);
+                    con.getImageSecondLang(ImageSource.gallery);
                   } catch (e) {
                     debugPrint("Bomadi brat");
                   }
                 },
-                child: con.image == null
+                child: con.imageSecondLang == null
                     ? Image.asset(
                         "assets/images/add_image.png",
                       )
@@ -143,7 +144,7 @@ class ADDMavzu extends ConsumerWidget {
                             Radius.circular(12),
                           ),
                           child: Image.file(
-                            con.image!,
+                            con.imageSecondLang!,
                             width: double.maxFinite,
                             height: 200,
                             fit: BoxFit.cover,
@@ -163,21 +164,21 @@ class ADDMavzu extends ConsumerWidget {
                   onPressed: () {
                     conMeteo
                         .uplodItes(
-                      title: con.nameContrl.text,
-                      patternPath: "MeteoTopic",
-                      imagePath: NetworkServiceConst.meteoTopicsImage,
+                      title: con.nameContrlLang.text,
+                      patternPath: "LangTopic",
+                      imagePath: NetworkServiceConst.langTopicsImage,
                       imagePathSecond:
-                          NetworkServiceConst.meteoTopicsImageDetail,
-                      path: NetworkServiceConst.meteoTopicsName,
-                      description: con.discCtrl.text,
-                      imageFile: con.image!,
-                      imageFileSecond: con.imageSecond!,
+                          NetworkServiceConst.langTopicsImageDetail,
+                      path: NetworkServiceConst.langTopicsName,
+                      description: con.discCtrlLang.text,
+                      imageFile: con.imageLang!,
+                      imageFileSecond: con.imageSecondLang!,
                     )
                         .then(
                       (value) {
                         Navigator.pop(context);
-                        con.discCtrl.clear();
-                        con.nameContrl.clear();
+                        con.discCtrlLang.clear();
+                        con.nameContrlLang.clear();
                       },
                     );
                   },
