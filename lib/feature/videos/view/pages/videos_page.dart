@@ -12,13 +12,19 @@ class VideosPage extends StatelessWidget {
         shadowColor: const Color(0xFF000000),
         elevation: 2,
         surfaceTintColor: const Color(0xFFEEEEEE),
+        centerTitle: true,
         title: const Text(
-          "Videos",
+          "Videolar",
           style: TextStyle(
             fontWeight: FontWeight.w700,
             color: Color.fromARGB(255, 9, 107, 187),
             letterSpacing: 4,
           ),
+        ),
+      ),
+      body: const Center(
+        child: Text(
+          "Videolar mavjud emas",
         ),
       ),
     );

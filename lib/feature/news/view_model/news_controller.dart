@@ -1,16 +1,15 @@
 import 'dart:io';
 
 import 'package:aviatoruz/core/constant/network_service_const.dart';
-import 'package:aviatoruz/core/services/rtdb_service.dart';
-import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
+import 'package:aviatoruz/data/entity/news_model.dart';
+import 'package:aviatoruz/feature/news/utils/rtdb_servive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final meteoTopicProvider =
-    ChangeNotifierProvider((ref) => MeteoTopicNotifier());
+final newsProvider = ChangeNotifierProvider((ref) => NewsNotifier());
 
-class MeteoTopicNotifier extends ChangeNotifier {
-  MeteoTopicNotifier() {
+class NewsNotifier extends ChangeNotifier {
+  NewsNotifier() {
     initState();
     notifyListeners();
   }
@@ -30,8 +29,8 @@ class MeteoTopicNotifier extends ChangeNotifier {
   }
 
   bool isLoading = false;
-  List<MeteoTopicItem> _items = [];
-  List<MeteoTopicItem> get items => _items;
+  List<NewsModel> _items = [];
+  List<NewsModel> get items => _items;
 
   // Future<void> deletePost(String id) async {
   //   await RTDBService.deletePost(NetworkServiceConst.meteoTopicsName, id);
@@ -40,30 +39,26 @@ class MeteoTopicNotifier extends ChangeNotifier {
   // }
 
   Future<void> fetchAllData() async {
-    _items = await RTDBService.getPosts(
-        "MeteoTopic", NetworkServiceConst.meteoTopicsName);
+    _items = await RTDBServiceNews.getMewsPosts(
+        "News", NetworkServiceConst.newsName);
     notifyListeners();
   }
 
-  Future<void> uplodItes({
+  Future<void> uplodNewsItes({
     required String title,
     required String patternPath,
     required String imagePath,
-    required String imagePathSecond,
     required String path,
     required String description,
     required File imageFile,
-    required File imageFileSecond,
   }) async {
-    await RTDBService.uploadItem(
+    await RTDBServiceNews.uploadNewsItem(
       title: title,
       patternPath: patternPath,
       imagePath: imagePath,
       path: path,
       description: description,
-      imagePathSecond: imagePathSecond,
       imageFile: imageFile,
-      imageFileSecond: imageFileSecond,
     );
     await fetchAllData();
     notifyListeners();
@@ -72,5 +67,3 @@ class MeteoTopicNotifier extends ChangeNotifier {
 
   //animation text
 }
-
-

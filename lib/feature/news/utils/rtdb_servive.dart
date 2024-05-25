@@ -1,34 +1,32 @@
 import 'dart:io';
 
+import 'package:aviatoruz/data/entity/news_model.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class RTDBService {
+class RTDBServiceNews {
   static DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-  static Future<List<MeteoTopicItem>> getPosts(
+  static Future<List<NewsModel>> getMewsPosts(
       String path, String topicsName) async {
-    List<MeteoTopicItem> postList = [];
+    List<NewsModel> postList = [];
     Query query = ref.child(path).child(topicsName);
     DatabaseEvent databaseEvent = await query.once();
     Iterable<DataSnapshot> result = databaseEvent.snapshot.children;
     for (DataSnapshot e in result) {
-      postList.add(
-          MeteoTopicItem.fromMap(Map<String, dynamic>.from(e.value as Map)));
+      postList
+          .add(NewsModel.fromMap(Map<String, dynamic>.from(e.value as Map)));
     }
     return postList;
   }
 
-  static Future<void> uploadItem({
+  static Future<void> uploadNewsItem({
     required String title,
     required String description,
     required String patternPath,
     required String imagePath,
-    required String imagePathSecond,
     required String path,
     required File imageFile,
-    required File imageFileSecond,
   }) async {
     // Upload file to Firebase Storage
     final storageRef = FirebaseStorage.instance.ref();
@@ -40,21 +38,13 @@ class RTDBService {
     // Get file URL
     final imageUrl = await fileRef.getDownloadURL();
 
-    final String dateTime1 = DateTime.now().toString();
-    final image1FileRef = storageRef.child('$imagePathSecond/$dateTime1');
-    await image1FileRef.putFile(imageFileSecond);
-
-    // Get file URL
-    final imageUrlSecond = await image1FileRef.getDownloadURL();
-
     // Create model
 
-    final newItem = MeteoTopicItem(
+    final newItem = NewsModel(
       id: key,
       title: title,
       description: description,
       imageUrl: imageUrl,
-      imageUrlSecond: imageUrlSecond,
     );
 
     // Write to Realtime Database

@@ -2,7 +2,8 @@ import 'package:aviatoruz/feature/aviation_lang/view/pages/aviation_lang_page.da
 import 'package:aviatoruz/feature/chat/view/pages/chat_page.dart';
 import 'package:aviatoruz/feature/home/view/widgets/my_drawer.dart';
 import 'package:aviatoruz/feature/meteologiya/view/pages/meteologiya_page.dart';
-import 'package:aviatoruz/feature/news/news_page.dart';
+import 'package:aviatoruz/feature/news/view/pages/news_page.dart';
+import 'package:aviatoruz/feature/test_page/view/pages/test_page.dart';
 import 'package:aviatoruz/feature/videos/view/pages/videos_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     List<String> icons = [
       "assets/icons/yangiliklar.png",
@@ -106,7 +106,14 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const TestPage(),
+                    ),
+                  );
+                },
                 child: Image.asset(
                   height: height * .16,
                   fit: BoxFit.cover,
