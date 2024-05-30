@@ -16,6 +16,7 @@ class LoginPage extends ConsumerWidget {
     ref.watch(loginNotifier);
     final con = ref.read(loginNotifier);
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFFF),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(

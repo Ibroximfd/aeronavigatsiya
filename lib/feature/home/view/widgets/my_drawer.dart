@@ -31,6 +31,33 @@ class MyDrawer extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: Color(0xFFFFFFFF),
+                      content: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        child: Text(
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                            "Toshkent davlat transport university tomonidan loyihalashtirilgan!\fKatta o'qituvchi Muhammad Olim Humoyunbek,"),
+                      ),
+                    ),
+                  );
+                },
+                leading: const Icon(Icons.info_outline_rounded),
+                title: const Text(
+                  "Biz haqimizda",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {
                   Share.share('check out my website https://example.com',
                       subject: 'Look what I made!');
                 },
@@ -64,8 +91,9 @@ class MyDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     CupertinoDialogRoute(
-                        builder: (context) => const LoginPage(),
-                        context: context),
+                      builder: (context) => const LoginPage(),
+                      context: context,
+                    ),
                   );
                 },
                 leading: const Icon(CupertinoIcons.profile_circled),

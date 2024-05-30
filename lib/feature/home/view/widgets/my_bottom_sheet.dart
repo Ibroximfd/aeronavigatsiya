@@ -9,21 +9,23 @@ class MyBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
-    Future<void> launchTelegram() async {
-      final url = Uri.parse('https://t.me/@HumoyunbekMuhammad');
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
+    void launchTelegram() async {
+      const url =
+          'https://t.me/@HumoyunbekMuhammad'; // O'zingizning Telegram username-ni kiriting
+      if (await canLaunch(url)) {
+        await launch(url);
       } else {
         throw 'Could not launch $url';
       }
     }
 
-    Future<void> makePhoneCall(String phoneNumber) async {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      await launchUrl(launchUri);
+    void makePhoneCall(String phoneNumber) async {
+      final url = 'tel:$phoneNumber';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
     }
 
     return Container(
