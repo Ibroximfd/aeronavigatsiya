@@ -20,7 +20,7 @@ class ChatPage extends ConsumerWidget {
         elevation: 2,
         surfaceTintColor: const Color(0xFFEEEEEE),
         title: const Text(
-          "Chats",
+          "Suhbatlar",
           style: TextStyle(
             fontWeight: FontWeight.w700,
             color: Color.fromARGB(255, 9, 107, 187),
@@ -66,7 +66,7 @@ class ChatPage extends ConsumerWidget {
                   child: TextField(
                     controller: con.controller,
                     decoration:
-                        const InputDecoration(labelText: 'Send a message...'),
+                        const InputDecoration(labelText: 'Xabat yuborish...'),
                   ),
                 ),
                 IconButton(
@@ -74,7 +74,7 @@ class ChatPage extends ConsumerWidget {
                   onPressed: () {
                     openIconSnackBar(
                       context,
-                      "Chat are not allowed",
+                      "Yuborib bo'lmadi",
                       const Icon(Icons.info),
                     );
                   },

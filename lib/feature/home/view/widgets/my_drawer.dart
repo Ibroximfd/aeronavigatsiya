@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:aviatoruz/core/services/auth_service.dart';
 import 'package:aviatoruz/feature/home/view/widgets/my_bottom_sheet.dart';
 import 'package:aviatoruz/feature/auth/view/pages/login_page.dart';
@@ -33,7 +31,8 @@ class MyDrawer extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  Share.share('check out my website https://example.com', subject: 'Look what I made!');
+                  Share.share('check out my website https://example.com',
+                      subject: 'Look what I made!');
                 },
                 leading: const Icon(Icons.share),
                 title: const Text(
