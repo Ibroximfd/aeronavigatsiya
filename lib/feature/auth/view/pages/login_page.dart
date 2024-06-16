@@ -2,7 +2,6 @@ import 'package:aviatoruz/core/services/auth_service.dart';
 import 'package:aviatoruz/core/widgets/custom_textfield.dart';
 import 'package:aviatoruz/feature/auth/view_model/login_notifier.dart';
 import 'package:aviatoruz/feature/home/view/pages/home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -123,13 +122,8 @@ class LoginPage extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () async {
-                    User? user;
-                    user = await AuthService.loginUser(
-                      context,
-                      con.emailController.text,
-                      con.passwordController.text,
-                    );
-                    if (user != null) {
+                    con.login(context);
+                    if (con.user != null) {
                       Navigator.pushAndRemoveUntil(
                         // ignore: use_build_context_synchronously
                         context,
@@ -140,7 +134,6 @@ class LoginPage extends ConsumerWidget {
                         ),
                         (route) => false,
                       );
-                      AuthService.isLoginIn = true;
                       debugPrint("${AuthService.isLoginIn}");
                       // ignore: use_build_context_synchronously
                       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   // instance of auth and FirebaseStroe
@@ -36,6 +37,11 @@ class AuthService {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
 
+      User? user = userCredential.user;
+      if (user != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+      }
       //save info
       store.collection("Users").doc(userCredential.user!.uid).set(
         {
@@ -55,10 +61,23 @@ class AuthService {
 
   //sign in with google
 
-  //delete
+  static signOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn')!;
+    isLoginIn = await prefs.setBool('isLoggedIn', !isLoggedIn);
+    return isLoginIn;
+  }
 
   //log out
   static Future<void> logOut() async {
     await auth.signOut();
+  }
+
+  //check initState
+
+  static Future<bool> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isLoginIn = prefs.getBool('isLoggedIn')!;
+    return isLoginIn;
   }
 }

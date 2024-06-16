@@ -37,7 +37,7 @@ class AviationLangPage extends ConsumerWidget {
           ),
         ),
       ),
-      body: con.isLoading
+      body: AuthService.isLoginIn
           ? ListView.builder(
               itemCount: con.items.length,
               itemBuilder: (context, index) {

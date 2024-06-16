@@ -1,16 +1,20 @@
 import 'package:aviatoruz/core/services/auth_service.dart';
+import 'package:aviatoruz/feature/auth/view_model/login_notifier.dart';
 import 'package:aviatoruz/feature/home/view/widgets/my_bottom_sheet.dart';
 import 'package:aviatoruz/feature/auth/view/pages/login_page.dart';
 import 'package:aviatoruz/feature/home/view/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends ConsumerWidget {
   const MyDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(loginNotifier);
+    var con = ref.read(loginNotifier);
     return Drawer(
       backgroundColor: const Color(0xFFFFFFFF),
       child: SafeArea(
@@ -108,7 +112,8 @@ class MyDrawer extends StatelessWidget {
               SizedBox(
                 child: AuthService.isLoginIn
                     ? ListTile(
-                        onTap: () {
+                        onTap: () async {
+                          con.signOut();
                           Navigator.pushAndRemoveUntil(
                             context,
                             CupertinoDialogRoute(
@@ -116,8 +121,6 @@ class MyDrawer extends StatelessWidget {
                                 context: context),
                             (route) => false,
                           );
-                          AuthService.isLoginIn = false;
-
                           debugPrint("${AuthService.isLoginIn}");
                         },
                         leading: const Icon(Icons.exit_to_app),

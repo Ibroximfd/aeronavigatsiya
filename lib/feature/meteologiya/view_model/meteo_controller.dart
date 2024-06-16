@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aviatoruz/core/constant/network_service_const.dart';
+import 'package:aviatoruz/core/services/auth_service.dart';
 import 'package:aviatoruz/core/services/rtdb_service.dart';
 import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class MeteoTopicNotifier extends ChangeNotifier {
         notifyListeners();
       },
     );
+    loadLoginStatus();
     notifyListeners();
   }
 
@@ -38,6 +40,12 @@ class MeteoTopicNotifier extends ChangeNotifier {
   //   await fetchData();
   //   notifyListeners();
   // }
+
+  Future<void> loadLoginStatus() async {
+    bool isLoggedIn = await AuthService.checkLoginStatus();
+    AuthService.isLoginIn = isLoggedIn;
+    notifyListeners();
+  }
 
   Future<void> fetchAllData() async {
     _items = await RTDBService.getPosts(
@@ -72,5 +80,3 @@ class MeteoTopicNotifier extends ChangeNotifier {
 
   //animation text
 }
-
-

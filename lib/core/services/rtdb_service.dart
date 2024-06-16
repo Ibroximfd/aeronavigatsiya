@@ -63,4 +63,57 @@ class RTDBService {
           newItem.toMap(),
         );
   }
+
+  static Future<void> updateItemById({
+    required String id,
+    required String newTitle,
+    required String newDescription,
+    required String patternPath,
+    required String imagePath,
+    required String imagePathSecond,
+    required String path,
+    File? newImageFile,
+    File? newImageFileSecond,
+  }) async {
+    // Reference to Firebase Storage and Database
+    final storageRef = FirebaseStorage.instance.ref();
+    final databaseRef = FirebaseDatabase.instance.ref();
+
+    // URLs for the updated images
+    String? imageUrl;
+    String? imageUrlSecond;
+
+    // Update the first image if provided
+    if (newImageFile != null) {
+      final String dateTime = DateTime.now().toString();
+      final fileRef = storageRef.child('$imagePath/$dateTime');
+      await fileRef.putFile(newImageFile);
+      imageUrl = await fileRef.getDownloadURL();
+    }
+
+    // Update the second image if provided
+    if (newImageFileSecond != null) {
+      final String dateTime1 = DateTime.now().toString();
+      final image1FileRef = storageRef.child('$imagePathSecond/$dateTime1');
+      await image1FileRef.putFile(newImageFileSecond);
+      imageUrlSecond = await image1FileRef.getDownloadURL();
+    }
+
+    // Fetch the current data of the item from the database
+    final itemRef = databaseRef.child(patternPath).child(path).child(id);
+    final snapshot = await itemRef.get();
+    if (!snapshot.exists) {
+      throw Exception("Item with id $id does not exist");
+    }
+
+    // Create updated model
+    final updatedItem = MeteoTopicItem(
+        id: id,
+        title: newTitle,
+        description: newDescription,
+        imageUrl: imageUrl!,
+        imageUrlSecond: imageUrlSecond!);
+    // Write updated data to Realtime Database
+    await itemRef.set(updatedItem.toMap());
+  }
 }

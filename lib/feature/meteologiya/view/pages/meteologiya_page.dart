@@ -1,5 +1,7 @@
+import 'package:aviatoruz/core/constant/network_service_const.dart';
 import 'package:aviatoruz/core/services/auth_service.dart';
 import 'package:aviatoruz/feature/detail_page/view/pages/detail_page.dart';
+import 'package:aviatoruz/feature/edit_page/view/page/edit_page.dart';
 import 'package:aviatoruz/feature/meteologiya/view/pages/add_mavzu.dart';
 import 'package:aviatoruz/feature/meteologiya/view_model/meteo_controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +17,7 @@ class MeteologiyaPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(meteoTopicProvider);
     var con = ref.read(meteoTopicProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
@@ -63,7 +66,7 @@ class MeteologiyaPage extends ConsumerWidget {
                                 return AlertDialog(
                                   backgroundColor: const Color(0xFFFFFFFF),
                                   content: Text(
-                                    "Do you really want to delete",
+                                    "Rostan ham o'chirilsinmi?",
                                     style: GoogleFonts.adamina(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600,
@@ -87,23 +90,77 @@ class MeteologiyaPage extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          height: 200,
-                          width: double.maxFinite,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(
-                                12,
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              alignment: Alignment.bottomLeft,
+                              height: 200,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(
+                                    12,
+                                  ),
+                                ),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                    con.items[index].imageUrl,
+                                  ),
+                                ),
                               ),
                             ),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                con.items[index].imageUrl,
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Text(
+                                        "Tahrirlashni xohlaysizmi?",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Orqaga"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) => EditPage(
+                                                  con.items[index].id,
+                                                  "MeteoTopic",
+                                                  NetworkServiceConst
+                                                      .meteoTopicsName,
+                                                  NetworkServiceConst
+                                                      .meteoTopicsImage,
+                                                  NetworkServiceConst
+                                                      .meteoTopicsImageDetail,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text("Tahrirlash"),
+                                        )
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              icon: Icon(
+                                Icons.edit,
                               ),
                             ),
-                          ),
+                          ],
                         ),
                         const SizedBox(
                           height: 4,

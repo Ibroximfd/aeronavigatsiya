@@ -77,7 +77,7 @@ class MyBottomSheet extends StatelessWidget {
                     width: 8,
                   ),
                   const Text(
-                    "Telegram orqali bog'lanish",
+                    "@HumoyunbekMuhammad",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.blue,
@@ -88,7 +88,7 @@ class MyBottomSheet extends StatelessWidget {
             ),
             CupertinoButton(
               onPressed: () {
-                makePhoneCall('+99899027821');
+                makePhoneCall('+998 99 831 0546');
               },
               child: Row(
                 children: [
@@ -101,7 +101,7 @@ class MyBottomSheet extends StatelessWidget {
                     width: 8,
                   ),
                   const Text(
-                    "Qo'ng'iroq qilish",
+                    "+998 99 027 821",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.blue,
