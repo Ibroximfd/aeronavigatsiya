@@ -1,28 +1,29 @@
 // To parse this JSON data, do
 //
-//     final newsModel = newsModelFromJson(jsonString);
+//     final meteoModel = meteoModelFromJson(jsonString);
 
 import 'dart:convert';
 
-NewsModel newsModelFromJson(String str) => NewsModel.fromJson(json.decode(str));
+MeteoModel meteoModelFromJson(String str) =>
+    MeteoModel.fromJson(json.decode(str));
 
-String newsModelToJson(NewsModel data) => json.encode(data.toJson());
+String meteoModelToJson(MeteoModel data) => json.encode(data.toJson());
 
-class NewsModel {
+class MeteoModel {
   final List<Datum> data;
 
-  NewsModel({
+  MeteoModel({
     required this.data,
   });
 
-  NewsModel copyWith({
+  MeteoModel copyWith({
     List<Datum>? data,
   }) =>
-      NewsModel(
+      MeteoModel(
         data: data ?? this.data,
       );
 
-  factory NewsModel.fromJson(Map<String, dynamic> json) => NewsModel(
+  factory MeteoModel.fromJson(Map<String, dynamic> json) => MeteoModel(
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
       );
 
@@ -36,14 +37,14 @@ class Datum {
   final int createdAt;
   final String title;
   final String body;
-  final String image;
+  final List<String> images;
 
   Datum({
     required this.id,
     required this.createdAt,
     required this.title,
     required this.body,
-    required this.image,
+    required this.images,
   });
 
   Datum copyWith({
@@ -51,14 +52,14 @@ class Datum {
     int? createdAt,
     String? title,
     String? body,
-    String? image,
+    List<String>? images,
   }) =>
       Datum(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         title: title ?? this.title,
         body: body ?? this.body,
-        image: image ?? this.image,
+        images: images ?? this.images,
       );
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -66,7 +67,7 @@ class Datum {
         createdAt: json["created_at"],
         title: json["title"],
         body: json["body"],
-        image: json["image"],
+        images: List<String>.from(json["images"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -74,6 +75,6 @@ class Datum {
         "created_at": createdAt,
         "title": title,
         "body": body,
-        "image": image,
+        "images": List<dynamic>.from(images.map((x) => x)),
       };
 }

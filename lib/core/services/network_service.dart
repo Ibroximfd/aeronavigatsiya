@@ -1,77 +1,203 @@
-import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
-import 'package:aviatoruz/data/entity/meteo_topic_model.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
-class NetworkServiceMeteoTopic {
-  static final DatabaseReference database = FirebaseDatabase.instance.ref();
+import 'user_storage.dart';
 
-  // CREATE (Qo'shish)
+@immutable
+final class ClientService {
+  static const ClientService _service = ClientService._internal();
 
-  static Future<void> create(
-      {required String dbPath, required Map<String, dynamic> data}) async {
-    String? key = database.child(dbPath).push().key;
-    await database.child(dbPath).child(key!).set(data);
-  }
+  const ClientService._internal();
 
-  // static Future<void> addItem(
-  //     MeteoTopicItem item, String path, String imagePAth) async {
-  //   // Image faylini ma'lumotlar bazasiga yuklab olish
-  //   if (item.image != null) {
-  //     final String imageUrl =
-  //         await uploadImageToStorage(item.image!, imagePAth);
+  factory ClientService() => _service;
 
-  //     // Image url ni itemga qo'shib qo'yamiz:
-  //     item.imageUrl = imageUrl;
-  //   }
+  static const String _meteoVersion = '/api:ZzNr7zwf';
+  static const String _englishVersion = '/api:deqobAO8';
+  static const String _newsVersion = '/api:eJPRAz5p';
+  static const String _baseUrl = 'x8ki-letl-twmt.n7.xano.io';
 
-  //   await database.child(path).push().set(item.toJson());
-  // }
+  static const String apiGetMeteo = '$_meteoVersion/meteo';
+  static const String apiGetEnglish = '$_englishVersion/english';
+  static const String apiGetNews = '$_newsVersion/news';
 
-  // READ (O'qish)
-  static Future<List<MeteoTopicItem>> getItems(
-      {required String parentPath}) async {
-    List<MeteoTopicItem> list = [];
+  static Future<String?> get({
+    required String api,
+    bool isAuthHeaderNeeded = false,
+    Map<String, dynamic>? param,
+  }) async {
+    final token = isAuthHeaderNeeded
+        ? await UserStorage.load(key: StorageKey.token)
+        : null;
+    final httpClient = HttpClient();
+    try {
+      final url = Uri.https(_baseUrl, api, param);
+      debugPrint(">>>>>>>>>>>>>>>>>>URL....$url>>>>>>>>>>>>>>>>>>>>");
+      final request = await httpClient.getUrl(url);
+      request.headers.set('Content-Type', 'application/json');
+      if (isAuthHeaderNeeded) {
+        request.headers.set(
+          'Authorization',
+          'Bearer $token',
+        );
+      }
+      final response = await request.close();
 
-    final path = database.child(parentPath);
-    DatabaseEvent databaseEvent = await path.once();
-    var result = databaseEvent.snapshot.children;
-    for (var e in result) {
-      list.add(
-          MeteoTopicItem.fromMap(Map<String, dynamic>.from(e.value as Map)));
+      debugPrint(
+          "\n<<<<<<<<<<<<<<<<<<<<<<<<<<${response.statusCode}>>>>>>>>>>>>>>>>>>>>>>>>");
+      if (response.statusCode == HttpStatus.ok) {
+        final responseBody = await response.transform(utf8.decoder).join();
+        return responseBody;
+      } else {
+        return null;
+      }
+    } finally {
+      httpClient.close();
     }
-    print(list.length);
-    return list;
   }
 
-  // UPDATE (Yangilash)
-  static Future<void> updateItem(
-      String id, MeteoTopicItem newItem, String path) async {
-    await database.child('$path/$id').update(newItem.toMap());
-    await database.child('$path/$id').update(newItem.toMap());
+  static Future<String?> post({
+    required String api,
+    Map<String, Object?>? data,
+    bool isAuthHeaderNeeded = false,
+    bool isFormData = false,
+  }) async {
+    final token = isAuthHeaderNeeded
+        ? await UserStorage.load(key: StorageKey.token)
+        : null;
+    final httpClient = HttpClient();
+    try {
+      final url = Uri.https(_baseUrl, api);
+      final request = await httpClient.postUrl(url);
+
+      if (isAuthHeaderNeeded) {
+        request.headers.set('Content-Type', 'application/json');
+        request.headers.set('Authorization', 'Bearer $token');
+      }
+
+      if (isFormData) {
+        const boundary = '----dart_http_boundry';
+        request.headers
+            .set('Content-Type', 'multipart/form-data; boundary=$boundary');
+        final body = _encodeFormData(data, boundary);
+        request
+          ..contentLength = utf8.encode(body).length
+          ..write(body);
+      } else {
+        request.headers.set('Content-Type', 'application/json');
+        final jsonData = jsonEncode(data);
+        request.add(utf8.encode(jsonData));
+      }
+
+      final response = await request.close();
+      debugPrint(
+          "\n<<<<<<<<<<<<<<<<<<<<<<<<<<${response.statusCode}>>>>>>>>>>>>>>>>>>>>>>>>");
+
+      if (response.statusCode == HttpStatus.ok ||
+          response.statusCode == HttpStatus.created) {
+        final responseBody = await response.transform(utf8.decoder).join();
+        debugPrint(
+            "\n<<<<<<<<<<<<<<<<<<<<<<<<<<$responseBody>>>>>>>>>>>>>>>>>>>>>>>>");
+        return responseBody;
+      } else {
+        return null;
+      }
+    } finally {
+      httpClient.close();
+    }
   }
 
-  // DELETE (O'chirish)
-  static Future<void> deleteItem(String id, String path) async {
-    await database.child('$path/$id').remove();
+  static String _encodeFormData(Map<String, Object?>? data, String boundary) {
+    final buffer = StringBuffer();
+    data?.forEach((key, value) {
+      if (value is List<Object?>) {
+        for (var item in value) {
+          buffer.write('--$boundary\r\n');
+          buffer.write('Content-Disposition: form-data; name="$key"\r\n\r\n');
+          buffer.write('$item\r\n');
+        }
+      } else {
+        buffer.write('--$boundary\r\n');
+        buffer.write('Content-Disposition: form-data; name="$key"\r\n\r\n');
+        buffer.write('$value\r\n');
+      }
+    });
+    buffer.write('--$boundary--\r\n');
+    return buffer.toString();
   }
 
-  // Faylni ma'lumotlar bazasiga yuklash
-  static Future<String> uploadImageToStorage(
-      File file, String imagePAth) async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-
-    // Faylni ma'lumotlar bazasiga yuklash uchun fayl nomini aniqlang
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference = storage.ref().child('$imagePAth/$fileName');
-    UploadTask uploadTask = reference.putFile(file);
-
-    // Yuklashni kuzatish va URL ni qaytarish
-    TaskSnapshot snapshot = await uploadTask;
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-
-    // Faylni muvaffaqiyatli yuklash bo'lsa URL ni qaytarish
-    return downloadUrl;
+  static Future<String?> put(
+      {required String api,
+      required Map<String, Object?> data,
+      bool isAuthHeaderNeeded = false}) async {
+    final token = isAuthHeaderNeeded
+        ? await UserStorage.load(key: StorageKey.token)
+        : isAuthHeaderNeeded;
+    final httpClient = HttpClient();
+    try {
+      final url = Uri.https(_baseUrl, api);
+      final request = await httpClient.putUrl(url);
+      request.headers.set('Content-Type', 'application/json');
+      if (isAuthHeaderNeeded) {
+        request.headers.set('Authorization', 'Bearer $token');
+      }
+      if (isAuthHeaderNeeded) {
+        request.headers.set('Accept', 'application/x-www-form-urlencoded');
+      }
+      request.add(utf8.encode(jsonEncode(data)));
+      final response = await request.close();
+      if (response.statusCode == HttpStatus.ok ||
+          response.statusCode == HttpStatus.created) {
+        final responseBody = await response.transform(utf8.decoder).join();
+        return responseBody;
+      } else {
+        return null;
+      }
+    } finally {
+      httpClient.close();
+    }
   }
+
+  Future<String?> delete({
+    required String api,
+    bool isAuthHeaderNeeded = false,
+  }) async {
+    final token = isAuthHeaderNeeded
+        ? await UserStorage.load(key: StorageKey.token)
+        : null;
+    final httpClient = HttpClient();
+    try {
+      final url = Uri.https(_baseUrl, api);
+      final request = await httpClient.deleteUrl(url);
+      if (isAuthHeaderNeeded) {
+        request.headers.set(
+          'Authorization',
+          'Bearer $token',
+        );
+      }
+      final response = await request.close();
+      final responseBody = await response.transform(utf8.decoder).join();
+      if (response.statusCode == HttpStatus.noContent ||
+          response.statusCode == HttpStatus.ok) {
+        return responseBody;
+      } else {
+        return null;
+      }
+    } finally {
+      httpClient.close();
+    }
+  }
+
+  static Map<String, dynamic> paramEmpty() => const <String, dynamic>{};
+  static Map<String, dynamic> paramGetBookings({required String type}) =>
+      <String, dynamic>{
+        'type': type,
+      };
+
+  static Map<String, dynamic> paramGetMastersFreeTime(
+          {required String date, required String duration}) =>
+      <String, dynamic>{
+        'date': date,
+        'duration': duration,
+      };
 }

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:aviatoruz/feature/splash/view/pages/splash_page.dart';
+import 'package:aviatoruz/feature/student/splash/view/pages/splash_page.dart';
 import 'package:aviatoruz/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,7 +28,7 @@ void main() async {
   );
   await FirebaseAppCheck.instance.activate();
   runApp(const ProviderScope(child: MyApp()));
-}
+}   
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

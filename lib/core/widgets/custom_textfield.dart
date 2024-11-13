@@ -5,7 +5,7 @@ class CostumTextField extends StatelessWidget {
   final bool obscureText;
   final double height;
   final Widget? suffixIcon;
-  const CostumTextField(
+  CostumTextField(
       {super.key,
       required this.controller,
       this.height = 44,
