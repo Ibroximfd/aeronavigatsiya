@@ -1,0 +1,2 @@
+/Users/ibroxim/Documents/projects/aviator_uz/android/app/.cxx/RelWithDebInfo/2q2gy92c/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/ibroxim/Documents/projects/aviator_uz/android/app/.cxx/RelWithDebInfo/2q2gy92c/armeabi-v7a/CMakeFiles/rebuild_cache.dir
