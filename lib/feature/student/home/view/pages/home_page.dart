@@ -1,12 +1,12 @@
-import 'package:aviatoruz/feature/student/aviation_lang/view/pages/aviation_lang_page.dart';
 import 'package:aviatoruz/feature/student/chat/view/pages/chat_page.dart';
 import 'package:aviatoruz/feature/student/home/view/widgets/my_drawer.dart';
-import 'package:aviatoruz/feature/student/meteologiya/view/pages/meteologiya_page.dart';
 import 'package:aviatoruz/feature/student/news/view/pages/news_page.dart';
 import 'package:aviatoruz/feature/student/pages/test_page.dart';
+import 'package:aviatoruz/feature/student/sections/view/pages/sections_page.dart';
 import 'package:aviatoruz/feature/student/videos/view/pages/videos_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -38,49 +38,27 @@ class HomePage extends StatelessWidget {
           ),
           child: Column(
             children: [
-              // Center(
-              //   child: Stack(
-              //     alignment: Alignment.topRight,
-              //     children: [
-              //       SizedBox(
-              //         width: width * .6,
-              //         child: const Text(
-              //           "AVIATOR",
-              //           style: TextStyle(
-              //             fontSize: 40,
-              //             fontWeight: FontWeight.w700,
-              //             color: Color.fromARGB(255, 9, 107, 187),
-              //             letterSpacing: 4,
-              //           ),
-              //         ),
-              //       ),
-              //       const Text(
-              //         "UZ",
-              //         style: TextStyle(
-              //           fontSize: 20,
-              //           fontWeight: FontWeight.w700,
-              //           color: Color.fromARGB(255, 9, 107, 187),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               Center(
-                child: Image.asset(
-                  "assets/images/logo_aviator.png",
-                  height: 60,
-                  width: double.maxFinite,
+                child: SizedBox(
+                  child: Text(
+                    "AERONAVIGATISYA",
+                    style: TextStyle(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromARGB(255, 9, 107, 187),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 60,
               ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => const MeteologiyaPage(),
+                      builder: (context) => const SectionsPage(),
                     ),
                   );
                 },
@@ -90,20 +68,8 @@ class HomePage extends StatelessWidget {
                   "assets/images/metrologiya.png",
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => const AviationLangPage(),
-                    ),
-                  );
-                },
-                child: Image.asset(
-                  height: height * .24,
-                  fit: BoxFit.cover,
-                  "assets/images/aviation_lang.png",
-                ),
+              SizedBox(
+                height: 50.h,
               ),
               GestureDetector(
                 onTap: () {

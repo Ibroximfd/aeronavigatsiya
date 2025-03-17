@@ -2,6 +2,7 @@ import 'package:aviatoruz/core/services/network_service.dart';
 import 'package:aviatoruz/data/entity/english_model.dart';
 import 'package:aviatoruz/data/entity/meteo_model.dart';
 import 'package:aviatoruz/data/entity/news_model.dart';
+import 'package:aviatoruz/data/entity/sections_model.dart';
 import 'package:flutter/material.dart';
 
 import 'app_repository.dart';
@@ -20,9 +21,9 @@ final class AppRepositoryImpl implements AppRepository {
   }
 
   @override
-  Future<MeteoModel?> getMeteo() async {
+  Future<MeteoModel?> getMeteo(String api) async {
     final result = await ClientService.get(
-      api: ClientService.apiGetMeteo,
+      api: api,
     );
     if (result != null) {
       return meteoModelFromJson(result);
@@ -50,6 +51,18 @@ final class AppRepositoryImpl implements AppRepository {
     );
     if (result != null) {
       return newsModelFromJson(result);
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<SectionModel?> getSections() async {
+    final result = await ClientService.get(
+      api: ClientService.apiGetSections,
+    );
+    if (result != null) {
+      return sectionModelFromJson(result);
     } else {
       return null;
     }

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final meteoModel = meteoModelFromJson(jsonString);
-
 import 'dart:convert';
 
 MeteoModel meteoModelFromJson(String str) =>
@@ -24,7 +20,9 @@ class MeteoModel {
       );
 
   factory MeteoModel.fromJson(Map<String, dynamic> json) => MeteoModel(
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: json["data"] != null
+            ? List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -37,14 +35,16 @@ class Datum {
   final int createdAt;
   final String title;
   final String body;
-  final List<String> images;
+  final String topicImage; // Asosiy rasm
+  final String detailImage; // Tafsilot rasmi
 
   Datum({
     required this.id,
     required this.createdAt,
     required this.title,
     required this.body,
-    required this.images,
+    required this.topicImage,
+    required this.detailImage,
   });
 
   Datum copyWith({
@@ -52,29 +52,38 @@ class Datum {
     int? createdAt,
     String? title,
     String? body,
-    List<String>? images,
+    String? topicImage,
+    String? detailImage,
   }) =>
       Datum(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         title: title ?? this.title,
         body: body ?? this.body,
-        images: images ?? this.images,
+        topicImage: topicImage ?? this.topicImage,
+        detailImage: detailImage ?? this.detailImage,
       );
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        id: json["id"],
-        createdAt: json["created_at"],
-        title: json["title"],
-        body: json["body"],
-        images: List<String>.from(json["images"].map((x) => x)),
-      );
+  factory Datum.fromJson(Map<String, dynamic> json) {
+    // `images` null emasligini va ro‘yxat ekanligini tekshiramiz
+    List<dynamic> images = (json["images"] is List) ? json["images"] : [];
+
+    return Datum(
+      id: json["id"] ?? 0,
+      createdAt: json["created_at"] ?? 0,
+      title: json["title"] ?? "",
+      body: json["body"] ?? "",
+      topicImage: images.isNotEmpty ? images[0] : "", // 1-rasm yoki bo‘sh
+      detailImage: images.length > 1 ? images[1] : "", // 2-rasm yoki bo‘sh
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "created_at": createdAt,
         "title": title,
         "body": body,
-        "images": List<dynamic>.from(images.map((x) => x)),
+        "topicImage": topicImage,
+        "detailImage": detailImage,
       };
 }

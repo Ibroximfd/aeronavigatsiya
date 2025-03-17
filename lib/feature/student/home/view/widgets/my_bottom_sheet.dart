@@ -18,7 +18,9 @@ class MyBottomSheet extends StatelessWidget {
 
     void makePhoneCall(String phoneNumber) async {
       final url = 'tel:$phoneNumber';
+      // ignore: deprecated_member_use
       if (await canLaunch(url)) {
+        // ignore: deprecated_member_use
         await launch(url);
       } else {
         throw 'Could not launch $url';
@@ -52,6 +54,7 @@ class MyBottomSheet extends StatelessWidget {
                 height: 10,
                 width: 60,
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: Colors.grey.withOpacity(0.5),
                   borderRadius: const BorderRadius.all(
                     Radius.circular(

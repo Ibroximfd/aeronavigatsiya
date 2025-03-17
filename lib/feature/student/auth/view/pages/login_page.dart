@@ -11,7 +11,6 @@ class LoginPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(loginNotifier);
-    final con = ref.read(loginNotifier);
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFFF),
       body: SafeArea(
@@ -77,9 +76,7 @@ class LoginPage extends ConsumerWidget {
                 obscureText: true,
                 suffixIcon: IconButton(
                   onPressed: () {},
-                  icon: false
-                      ? const Icon(CupertinoIcons.eye_slash)
-                      : const Icon(CupertinoIcons.eye),
+                  icon: const Icon(CupertinoIcons.eye),
                 ),
               ),
               const SizedBox(
