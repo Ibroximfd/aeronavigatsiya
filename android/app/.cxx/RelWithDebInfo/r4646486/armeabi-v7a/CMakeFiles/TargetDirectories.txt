@@ -1,0 +1,2 @@
+/Users/ibroxim/Documents/projects/aeronavigatsiya/android/app/.cxx/RelWithDebInfo/r4646486/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/ibroxim/Documents/projects/aeronavigatsiya/android/app/.cxx/RelWithDebInfo/r4646486/armeabi-v7a/CMakeFiles/rebuild_cache.dir

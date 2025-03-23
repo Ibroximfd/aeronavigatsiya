@@ -1,0 +1,2 @@
+/Users/ibroxim/Documents/projects/aeronavigatsiya/android/app/.cxx/Debug/3sfkd2kg/x86/CMakeFiles/edit_cache.dir
+/Users/ibroxim/Documents/projects/aeronavigatsiya/android/app/.cxx/Debug/3sfkd2kg/x86/CMakeFiles/rebuild_cache.dir

@@ -18,10 +18,13 @@ class MyDrawer extends ConsumerWidget {
           child: Column(
             children: [
               Center(
-                child: Image.asset(
-                  "assets/images/logo_aviator.png",
-                  height: 40,
-                  width: double.maxFinite,
+                child: Text(
+                  "AERONAVIGATISYA",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w700,
+                    color: const Color.fromARGB(255, 9, 107, 187),
+                  ),
                 ),
               ),
               const Divider(),

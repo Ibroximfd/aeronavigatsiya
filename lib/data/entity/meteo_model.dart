@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final meteoModel = meteoModelFromJson(jsonString);
+
 import 'dart:convert';
 
 MeteoModel meteoModelFromJson(String str) =>
@@ -20,9 +24,7 @@ class MeteoModel {
       );
 
   factory MeteoModel.fromJson(Map<String, dynamic> json) => MeteoModel(
-        data: json["data"] != null
-            ? List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)))
-            : [],
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,8 +37,8 @@ class Datum {
   final int createdAt;
   final String title;
   final String body;
-  final String topicImage; // Asosiy rasm
-  final String detailImage; // Tafsilot rasmi
+  final String topicImage;
+  final String detailImage;
 
   Datum({
     required this.id,
@@ -64,19 +66,14 @@ class Datum {
         detailImage: detailImage ?? this.detailImage,
       );
 
-  factory Datum.fromJson(Map<String, dynamic> json) {
-    // `images` null emasligini va ro‘yxat ekanligini tekshiramiz
-    List<dynamic> images = (json["images"] is List) ? json["images"] : [];
-
-    return Datum(
-      id: json["id"] ?? 0,
-      createdAt: json["created_at"] ?? 0,
-      title: json["title"] ?? "",
-      body: json["body"] ?? "",
-      topicImage: images.isNotEmpty ? images[0] : "", // 1-rasm yoki bo‘sh
-      detailImage: images.length > 1 ? images[1] : "", // 2-rasm yoki bo‘sh
-    );
-  }
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        id: json["id"],
+        createdAt: json["created_at"],
+        title: json["title"],
+        body: json["body"],
+        topicImage: json["topicImage"],
+        detailImage: json["detailImage"],
+      );
 
   Map<String, dynamic> toJson() => {
         "id": id,
