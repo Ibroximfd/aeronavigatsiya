@@ -33,7 +33,6 @@ class _MeteologiyaPageState extends ConsumerState<SectionTopicPage> {
     ClientService.apiGetXalqaroHavoHudi,
     ClientService.apiGetXarvozInsonOmili,
     ClientService.apiGetHHbModellashtish,
-    ClientService.apiGetAviatsiyaAsoslari,
   ];
   @override
   void initState() {

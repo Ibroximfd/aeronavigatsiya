@@ -31,7 +31,7 @@ final class ClientService {
   static const String _aviatsiyaQonun = '/api:HR9JiUMu';
   static const String _xalqaroHavoHudi = '/api:by-Squkv';
   static const String _parvozInsonOmili = '/api:k0syyFll';
-  static const String _hhbModellashtirish = '/api:k0syyFll';
+  static const String _hhbModellashtirish = '/api:TESCsm0u';
 
   //api
   static const String apiGetEnglish = '$_englishVersion/english';
@@ -42,7 +42,7 @@ final class ClientService {
   static const String apiGetAviatsiyaJihozlari =
       '$_aviatsiyaJihozlari/aviatsiya_jihozlari';
   static const String apiGetRadioFrazeologiyaQoidalari =
-      '$_radiofrazalogiyaQoidalari/radiofrazaeologiya_qoidalari';
+      '$_radiofrazalogiyaQoidalari/radiofrazeologiya_qoidalari';
   static const String apiGetAviatsiyaMeteologiyasi =
       '$_aviatsiyMeteologiyasi/aviatsiya_meteologiyasi';
   static const String apiGetHavoKemalariningTuzilishi =
@@ -55,7 +55,7 @@ final class ClientService {
   static const String apiGetHavoNavigatsiyasi =
       '$_havoNavigatsiyasi/havo_navigatsiyasi';
   static const String apiGetParvozRadio =
-      '$_parvozRadio/parvozlarni_radiotexnik_vositasi';
+      '$_parvozRadio/parvozlarni_radiotexnik_taminoti';
   static const String apiGetHududiyNavigatsiya =
       '$_hududiyNavigatsiya/hududiy_navigatsiya';
   static const String apiGetDispatcherTexnologiyasi =
