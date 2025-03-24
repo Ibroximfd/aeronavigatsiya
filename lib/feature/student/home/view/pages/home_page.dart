@@ -1,7 +1,7 @@
 import 'package:aviatoruz/feature/student/chat/view/pages/chat_page.dart';
 import 'package:aviatoruz/feature/student/home/view/widgets/my_drawer.dart';
 import 'package:aviatoruz/feature/student/news/view/pages/news_page.dart';
-import 'package:aviatoruz/feature/student/pages/test_page.dart';
+import 'package:aviatoruz/feature/student/tests/pages/test_page.dart';
 import 'package:aviatoruz/feature/student/sections/view/pages/sections_page.dart';
 import 'package:aviatoruz/feature/student/videos/view/pages/videos_page.dart';
 import 'package:flutter/cupertino.dart';
