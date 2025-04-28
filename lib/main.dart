@@ -1,33 +1,28 @@
-import 'dart:ui';
-
-import 'package:aviatoruz/feature/student/splash/view/pages/splash_page.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/auth/auth_bloc.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/home/home_bloc.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/library/library_bloc.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/privacy/privacy_bloc.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/splash/splash_bloc.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/splash/splash_event.dart';
 import 'package:aviatoruz/firebase_options.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:aviatoruz/presentation/teachers/screens/auth/auth_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart'; // For Quill localizations
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
+  // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
-  await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-    androidProvider: AndroidProvider.debug,
-    appleProvider: AppleProvider.appAttest,
-  );
-  await FirebaseAppCheck.instance.activate();
-  runApp(const ProviderScope(child: MyApp()));
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -35,20 +30,47 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(430, 930),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          home: const SplashPage(),
-        );
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => SplashBloc()..add(CheckPrivacyAccepted())),
+        BlocProvider(create: (_) => PrivacyBloc()),
+        BlocProvider(create: (_) => AuthBloc()),
+        BlocProvider(create: (_) => HomeBloc()),
+        BlocProvider(create: (_) => LibraryBloc()),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(430, 930),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                useMaterial3: true,
+                appBarTheme: const AppBarTheme(),
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+              // Add localization support for FlutterQuill and other Flutter widgets
+              supportedLocales: const [
+                Locale('uz', 'UZ'), // Uzbek
+                Locale('en', 'US'), // English as fallback
+              ],
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                FlutterQuillLocalizations
+                    .delegate, // Fixes the Quill localization error
+              ],
+              home: AuthGate());
+        },
+      ),
     );
   }
 }

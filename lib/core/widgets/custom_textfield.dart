@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CostumTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -17,6 +18,10 @@ class CostumTextField extends StatelessWidget {
     return SizedBox(
       height: height,
       child: TextField(
+        style: GoogleFonts.nunitoSans(
+          fontSize: 20,
+          color: Colors.black87,
+        ),
         obscureText: obscureText,
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,
