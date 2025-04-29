@@ -79,15 +79,37 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       DeleteTopicEvent event, Emitter<LibraryState> emit) async {
     emit(LibraryLoading());
     try {
-      await FirebaseFirestore.instance
+      final topicDoc = await firestore
+          .collection('library')
+          .doc(event.chapterId)
+          .collection('topics')
+          .doc(event.topicId)
+          .get();
+
+      if (topicDoc.exists) {
+        final data = topicDoc.data();
+        final coverImageUrl = data?['coverImageUrl'];
+
+        // Storage dagi rasmni o'chirish
+        if (coverImageUrl != null &&
+            coverImageUrl is String &&
+            coverImageUrl.isNotEmpty) {
+          final ref = FirebaseStorage.instance.refFromURL(coverImageUrl);
+          await ref.delete();
+        }
+      }
+
+      // Firestore dan topicni o'chirish
+      await firestore
           .collection('library')
           .doc(event.chapterId)
           .collection('topics')
           .doc(event.topicId)
           .delete();
+
       emit(LibrarySuccess());
     } catch (e) {
-      emit(LibraryFailure(e.toString()));
+      emit(LibraryFailure('Failed to delete topic: $e'));
     }
   }
 
@@ -109,7 +131,26 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       DeleteChapterEvent event, Emitter<LibraryState> emit) async {
     emit(LibraryLoading());
     try {
+      final chapterDoc =
+          await firestore.collection('library').doc(event.chapterId).get();
+
+      if (chapterDoc.exists) {
+        final data = chapterDoc.data();
+        final coverImageUrl = data?['coverImageUrl'];
+
+        // Storage dagi rasmni o'chirish
+        if (coverImageUrl != null &&
+            coverImageUrl is String &&
+            coverImageUrl.isNotEmpty) {
+          final ref = FirebaseStorage.instance.refFromURL(coverImageUrl);
+          await ref.delete();
+        }
+      }
+
+      // Firestore dan chapterni o'chirish
       await firestore.collection('library').doc(event.chapterId).delete();
+
+      // Chapter o'chirilgandan keyin listni qayta yuklash
       add(FetchChaptersEvent());
     } catch (e) {
       emit(LibraryFailure('Failed to delete chapter: $e'));
