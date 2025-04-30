@@ -87,7 +87,7 @@ class MyDrawer extends StatelessWidget {
                                 child: Text(
                                   "AERONAVIGATISYA",
                                   style: TextStyle(
-                                    fontSize: 26,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.white,
                                   ),
