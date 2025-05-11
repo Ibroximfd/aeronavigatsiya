@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:aviatoruz/core/config/network_constants.dart';
 import 'package:aviatoruz/data/entity/chapter_model.dart';
 import 'package:aviatoruz/presentation/teachers/bloc/library/library_bloc.dart';
 import 'package:aviatoruz/presentation/teachers/screens/library/create_chapter_page.dart';
@@ -12,10 +13,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ChaptersPage extends StatelessWidget {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final String path;
+  const ChaptersPage({super.key, required this.path});
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -29,53 +33,13 @@ class ChaptersPage extends StatelessWidget {
           slivers: [
             // Custom SliverAppBar
             SliverAppBar(
-              expandedHeight: 120.h,
               pinned: true,
               backgroundColor: Colors.transparent,
-              flexibleSpace: FlexibleSpaceBar(
-                title: ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [Colors.blue.shade600, Colors.blue.shade900],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ).createShader(bounds),
-                  child: Text(
-                    "Boblar",
-                    style: TextStyle(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4,
-                          color: Colors.black45,
-                          offset: Offset(1, 1),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.blue.shade300,
-                        Colors.blue.shade500,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(24),
-                    ),
-                  ),
-                ),
-              ),
             ),
             // StreamBuilder for Firestore data
             SliverToBoxAdapter(
               child: StreamBuilder<QuerySnapshot>(
-                stream: firestore.collection('library').snapshots(),
+                stream: firestore.collection(path).snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox(
@@ -160,6 +124,7 @@ class ChaptersPage extends StatelessWidget {
                                 context,
                                 entry.value,
                                 entry.key,
+                                path,
                               ))
                           .toList(),
                     ),
@@ -174,7 +139,9 @@ class ChaptersPage extends StatelessWidget {
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => const CreateChapterPage(),
+            builder: (_) => CreateChapterPage(
+              path: path,
+            ),
           ),
         ),
         backgroundColor: Colors.blue.shade500,
@@ -188,7 +155,7 @@ class ChaptersPage extends StatelessWidget {
   }
 
   Widget _buildChapterItem(
-      BuildContext context, ChapterModel chapter, int index) {
+      BuildContext context, ChapterModel chapter, int index, String path) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -211,51 +178,76 @@ class ChaptersPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => TopicListPage(chapterId: chapter.id),
+                builder: (_) => TopicListPage(
+                  chapterId: chapter.id,
+                  path: NetworkConstants.library,
+                ),
               ),
             );
           },
           onLongPress: () {
-            _showChapterOptions(context, chapter);
+            _showChapterOptions(context, chapter, path);
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Chapter Image with Shimmer
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
-                child: Image.network(
-                  chapter.imageUrl,
-                  width: double.infinity,
-                  height: 180,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Shimmer.fromColors(
-                      baseColor: Colors.grey.shade200,
-                      highlightColor: Colors.deepPurple.shade100,
-                      child: Container(
-                        width: double.infinity,
-                        height: 180,
-                        color: Colors.grey.shade200,
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                    child: Image.network(
+                      chapter.imageUrl,
                       width: double.infinity,
                       height: 180,
-                      color: Colors.grey.shade200,
-                      child: const Icon(
-                        Icons.broken_image,
-                        color: Colors.grey,
-                        size: 50,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey.shade200,
+                          highlightColor: Colors.deepPurple.shade100,
+                          child: Container(
+                            width: double.infinity,
+                            height: 180,
+                            color: Colors.grey.shade200,
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: double.infinity,
+                          height: 180,
+                          color: Colors.grey.shade200,
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                            size: 50,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30).r),
+                      child: Text(
+                        chapter.id,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  )
+                ],
               ),
               // Chapter Title
               Padding(
@@ -263,7 +255,6 @@ class ChaptersPage extends StatelessWidget {
                 child: Text(
                   chapter.name,
                   style: const TextStyle(
-                    fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
                   ),
@@ -277,7 +268,8 @@ class ChaptersPage extends StatelessWidget {
   }
 }
 
-void _showChapterOptions(BuildContext context, ChapterModel chapter) {
+void _showChapterOptions(
+    BuildContext context, ChapterModel chapter, String path) {
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
@@ -298,7 +290,10 @@ void _showChapterOptions(BuildContext context, ChapterModel chapter) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => EditChapterPage(chapter: chapter),
+                      builder: (_) => EditChapterPage(
+                        chapter: chapter,
+                        path: path,
+                      ),
                     ),
                   );
                 },
@@ -308,7 +303,7 @@ void _showChapterOptions(BuildContext context, ChapterModel chapter) {
                 title: const Text('O‘chirish'),
                 onTap: () {
                   Navigator.pop(context);
-                  _confirmDelete(context, chapter.id);
+                  _confirmDelete(context, chapter.id, path);
                 },
               ),
             ],
@@ -319,7 +314,7 @@ void _showChapterOptions(BuildContext context, ChapterModel chapter) {
   );
 }
 
-void _confirmDelete(BuildContext context, String chapterId) {
+void _confirmDelete(BuildContext context, String chapterId, String path) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -333,7 +328,9 @@ void _confirmDelete(BuildContext context, String chapterId) {
         TextButton(
           onPressed: () {
             Navigator.pop(context);
-            context.read<LibraryBloc>().add(DeleteChapterEvent(chapterId));
+            context
+                .read<LibraryBloc>()
+                .add(DeleteChapterEvent(chapterId, path));
           },
           child: const Text('O‘chirish', style: TextStyle(color: Colors.red)),
         ),

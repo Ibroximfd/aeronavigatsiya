@@ -8,10 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class StudentChaptersPage extends StatelessWidget {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final String path;
+  const StudentChaptersPage({super.key, required this.path});
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -32,7 +34,7 @@ class StudentChaptersPage extends StatelessWidget {
             // StreamBuilder for Firestore data
             SliverToBoxAdapter(
               child: StreamBuilder<QuerySnapshot>(
-                stream: firestore.collection('library').snapshots(),
+                stream: firestore.collection(path).snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox(
@@ -154,7 +156,10 @@ class StudentChaptersPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => StudentTopicListPage(chapterId: chapter.id),
+                builder: (_) => StudentTopicListPage(
+                  chapterId: chapter.id,
+                  path: path,
+                ),
               ),
             );
           },

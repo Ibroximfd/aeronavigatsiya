@@ -10,8 +10,10 @@ import 'package:shimmer/shimmer.dart';
 
 class StudentTopicListPage extends StatelessWidget {
   final String chapterId;
+  final String path;
 
-  const StudentTopicListPage({super.key, required this.chapterId});
+  const StudentTopicListPage(
+      {super.key, required this.chapterId, required this.path});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,7 @@ class StudentTopicListPage extends StatelessWidget {
               SliverToBoxAdapter(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: firestore
-                      .collection('library')
+                      .collection(path)
                       .doc(chapterId)
                       .collection('topics')
                       .snapshots(),

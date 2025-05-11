@@ -8,9 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 class EditChapterPage extends StatefulWidget {
+  final String path;
   final ChapterModel chapter;
 
-  const EditChapterPage({super.key, required this.chapter});
+  const EditChapterPage({super.key, required this.chapter, required this.path});
 
   @override
   State<EditChapterPage> createState() => _EditChapterPageState();
@@ -203,9 +204,8 @@ class _EditChapterPageState extends State<EditChapterPage> {
                           name: _nameController.text.trim(),
                           imageUrl: _newImageUrl ?? widget.chapter.imageUrl,
                         );
-                        context
-                            .read<LibraryBloc>()
-                            .add(UpdateChapterEvent(updatedChapter));
+                        context.read<LibraryBloc>().add(
+                            UpdateChapterEvent(updatedChapter, widget.path));
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(

@@ -1,86 +1,85 @@
 import 'dart:io';
 
+import 'package:aviatoruz/core/config/network_constants.dart';
 import 'package:aviatoruz/data/datasource/library_repository.dart';
 import 'package:aviatoruz/data/entity/chapter_model.dart';
-import 'package:aviatoruz/data/entity/topic_model.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/akt_library_bloc/akt_library_event.dart';
+import 'package:aviatoruz/presentation/teachers/bloc/akt_library_bloc/akt_library_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-part 'library_event.dart';
-part 'library_state.dart';
-
-class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
+class AKTLibraryBloc extends Bloc<AKTLibraryEvent, AKTLibraryState> {
   final LibraryRepository repository = LibraryRepository();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  LibraryBloc() : super(LibraryInitial()) {
-    on<CreateChapterEvent>(_onCreateChapter);
-    on<PickChapterImageEvent>(_onPickChapterImage);
-    on<UpdateTopicEvent>(_onUpdateTopic);
-    on<DeleteTopicEvent>(_onDeleteTopic);
+  AKTLibraryBloc() : super(AKTLibraryInitial()) {
+    on<AKTCreateChapterEvent>(_onCreateChapter);
+    on<AKTPickChapterImageEvent>(_onPickChapterImage);
+    on<AKTUpdateTopicEvent>(_onUpdateTopic);
+    on<AKTDeleteTopicEvent>(_onDeleteTopic);
 
-    on<FetchChaptersEvent>(_onFetchChapters);
-    on<DeleteChapterEvent>(_onDeleteChapter);
-    on<UpdateChapterEvent>(_onUpdateChapter);
+    on<AKTFetchChaptersEvent>(_onFetchChapters);
+    on<AKTDeleteChapterEvent>(_onDeleteChapter);
+    on<AKTUpdateChapterEvent>(_onUpdateChapter);
   }
   Future<void> _onCreateChapter(
-      CreateChapterEvent event, Emitter<LibraryState> emit) async {
-    emit(LibraryLoading());
+      AKTCreateChapterEvent event, Emitter<AKTLibraryState> emit) async {
+    emit(AKTLibraryLoading());
     try {
-      await repository.createChapter(event.chapter, event.path);
-      emit(LibrarySuccess());
+      await repository.createChapter(
+          event.chapter, NetworkConstants.aktLibrary);
+      emit(AKTLibrarySuccess());
     } catch (e) {
-      emit(LibraryFailure(e.toString()));
+      emit(AKTLibraryFailure(e.toString()));
     }
   }
 
   Future<void> _onPickChapterImage(
-      PickChapterImageEvent event, Emitter<LibraryState> emit) async {
-    emit(LibraryImagePicking());
+      AKTPickChapterImageEvent event, Emitter<AKTLibraryState> emit) async {
+    emit(AKTLibraryImagePicking());
     try {
       final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (picked == null) {
-        emit(const LibraryFailure("Rasm tanlanmadi."));
+        emit(const AKTLibraryFailure("Rasm tanlanmadi."));
         return;
       }
       final file = File(picked.path);
       final fileName = const Uuid().v4();
       final ref =
-          FirebaseStorage.instance.ref().child('chapter_covers/$fileName');
+          FirebaseStorage.instance.ref().child('akt_chapter_covers/$fileName');
       await ref.putFile(file);
       final url = await ref.getDownloadURL();
-      emit(LibraryImagePicked(url));
+      emit(AKTLibraryImagePicked(url));
     } catch (e) {
-      emit(LibraryFailure("Rasm yuklashda xatolik: $e"));
+      emit(AKTLibraryFailure("Rasm yuklashda xatolik: $e"));
     }
   }
 
   Future<void> _onUpdateTopic(
-      UpdateTopicEvent event, Emitter<LibraryState> emit) async {
-    emit(LibraryLoading());
+      AKTUpdateTopicEvent event, Emitter<AKTLibraryState> emit) async {
+    emit(AKTLibraryLoading());
     try {
       await FirebaseFirestore.instance
-          .collection(event.path)
+          .collection(NetworkConstants.aktLibrary)
           .doc(event.chapterId)
           .collection('topics')
           .doc(event.topic.id)
           .update(event.topic.toJson());
-      emit(LibrarySuccess());
+      emit(AKTLibrarySuccess());
     } catch (e) {
-      emit(LibraryFailure(e.toString()));
+      emit(AKTLibraryFailure(e.toString()));
     }
   }
 
   Future<void> _onDeleteTopic(
-      DeleteTopicEvent event, Emitter<LibraryState> emit) async {
-    emit(LibraryLoading());
+      AKTDeleteTopicEvent event, Emitter<AKTLibraryState> emit) async {
+    emit(AKTLibraryLoading());
     try {
       final topicDoc = await firestore
-          .collection(event.path)
+          .collection(NetworkConstants.library)
           .doc(event.chapterId)
           .collection('topics')
           .doc(event.topicId)
@@ -101,38 +100,41 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
 
       // Firestore dan topicni o'chirish
       await firestore
-          .collection(event.path)
+          .collection(NetworkConstants.aktLibrary)
           .doc(event.chapterId)
           .collection('topics')
           .doc(event.topicId)
           .delete();
 
-      emit(LibrarySuccess());
+      emit(AKTLibrarySuccess());
     } catch (e) {
-      emit(LibraryFailure('Failed to delete topic: $e'));
+      emit(AKTLibraryFailure('Failed to delete topic: $e'));
     }
   }
 
   Future<void> _onFetchChapters(
-      FetchChaptersEvent event, Emitter<LibraryState> emit) async {
+      AKTFetchChaptersEvent event, Emitter<AKTLibraryState> emit) async {
     try {
-      emit(LibraryLoading());
-      final snapshot = await firestore.collection(event.path).get();
+      emit(AKTLibraryLoading());
+      final snapshot =
+          await firestore.collection(NetworkConstants.aktLibrary).get();
       final chapters = snapshot.docs
           .map((doc) => ChapterModel.fromJson(doc.data()))
           .toList();
-      emit(LibraryLoaded(chapters));
+      emit(AKTLibraryLoaded(chapters));
     } catch (e) {
-      emit(LibraryError('Failed to fetch chapters: $e'));
+      emit(AKTLibraryError('Failed to fetch chapters: $e'));
     }
   }
 
   Future<void> _onDeleteChapter(
-      DeleteChapterEvent event, Emitter<LibraryState> emit) async {
-    emit(LibraryLoading());
+      AKTDeleteChapterEvent event, Emitter<AKTLibraryState> emit) async {
+    emit(AKTLibraryLoading());
     try {
-      final chapterDoc =
-          await firestore.collection(event.path).doc(event.chapterId).get();
+      final chapterDoc = await firestore
+          .collection(NetworkConstants.aktLibrary)
+          .doc(event.chapterId)
+          .get();
 
       if (chapterDoc.exists) {
         final data = chapterDoc.data();
@@ -148,26 +150,29 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       }
 
       // Firestore dan chapterni o'chirish
-      await firestore.collection(event.path).doc(event.chapterId).delete();
+      await firestore
+          .collection(NetworkConstants.library)
+          .doc(event.chapterId)
+          .delete();
 
       // Chapter o'chirilgandan keyin listni qayta yuklash
-      add(FetchChaptersEvent(event.path));
+      add(AKTFetchChaptersEvent());
     } catch (e) {
-      emit(LibraryFailure('Failed to delete chapter: $e'));
+      emit(AKTLibraryFailure('Failed to delete chapter: $e'));
     }
   }
 
   Future<void> _onUpdateChapter(
-      UpdateChapterEvent event, Emitter<LibraryState> emit) async {
-    emit(LibraryLoading());
+      AKTUpdateChapterEvent event, Emitter<AKTLibraryState> emit) async {
+    emit(AKTLibraryLoading());
     try {
       await firestore
-          .collection(event.path)
+          .collection(NetworkConstants.aktLibrary)
           .doc(event.chapter.id)
           .update(event.chapter.toMap());
-      add(FetchChaptersEvent(event.path));
+      add(AKTFetchChaptersEvent());
     } catch (e) {
-      emit(LibraryFailure('Failed to update chapter: $e'));
+      emit(AKTLibraryFailure('Failed to update chapter: $e'));
     }
   }
 }

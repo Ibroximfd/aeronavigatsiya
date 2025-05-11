@@ -10,7 +10,7 @@ class MyBottomSheet extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     Future<void> _launchTelegram() async {
-      final url = Uri.parse('https://t.me/MuhammadAliym');
+      final url = Uri.parse('https://t.me/aeronavigatsiya_uz');
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         throw 'Telegramga o\'tolmadi: $url';
       }
@@ -88,7 +88,7 @@ class MyBottomSheet extends StatelessWidget {
             ),
             CupertinoButton(
               onPressed: () {
-                makePhoneCall('+998 99 831 0546');
+                makePhoneCall('+998 99 027 2821');
               },
               child: Row(
                 children: [

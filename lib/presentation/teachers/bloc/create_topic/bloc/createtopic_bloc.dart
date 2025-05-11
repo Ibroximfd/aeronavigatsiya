@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aviatoruz/core/config/network_constants.dart';
 import 'package:aviatoruz/data/datasource/library_repository.dart';
 import 'package:aviatoruz/presentation/teachers/bloc/create_topic/bloc/createtopic_event.dart';
 import 'package:aviatoruz/presentation/teachers/bloc/create_topic/bloc/createtopic_state.dart';
@@ -52,7 +53,8 @@ class CreateTopicBloc extends Bloc<CreateTopicEvent, CreateTopicState> {
       CreateTopic event, Emitter<CreateTopicState> emit) async {
     emit(CreateTopicSubmitting());
     try {
-      await repository.createTopic(event.chapterId, event.topic);
+      await repository.createTopic(
+          event.chapterId, event.topic, NetworkConstants.library);
       emit(CreateTopicSuccess());
     } catch (e) {
       emit(CreateTopicFailure(message: e.toString()));

@@ -11,9 +11,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TopicListPage extends StatelessWidget {
+  final String path;
   final String chapterId;
 
-  const TopicListPage({super.key, required this.chapterId});
+  const TopicListPage({super.key, required this.chapterId, required this.path});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class TopicListPage extends StatelessWidget {
             slivers: [
               // Custom SliverAppBar with wave-like bottom
               SliverAppBar(
-                expandedHeight: 120,
+                expandedHeight: 80,
                 pinned: true,
                 backgroundColor: Colors.transparent,
                 flexibleSpace: FlexibleSpaceBar(
@@ -74,7 +75,7 @@ class TopicListPage extends StatelessWidget {
               SliverToBoxAdapter(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: firestore
-                      .collection('library')
+                      .collection(path)
                       .doc(chapterId)
                       .collection('topics')
                       .snapshots(),
@@ -246,7 +247,7 @@ class TopicListPage extends StatelessWidget {
                     );
                   },
                   onLongPress: () {
-                    _showTopicOptions(context, topic, chapterId);
+                    _showTopicOptions(context, topic, chapterId, path);
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -337,7 +338,7 @@ class TopicListPage extends StatelessWidget {
 }
 
 void _showTopicOptions(
-    BuildContext context, TopicModel topic, String chapterId) {
+    BuildContext context, TopicModel topic, String chapterId, String path) {
   showModalBottomSheet(
     context: context,
     shape: const RoundedRectangleBorder(
@@ -458,7 +459,7 @@ void _showTopicOptions(
                             ),
                             onTap: () {
                               Navigator.pop(context);
-                              _confirmDelete(context, topic, chapterId);
+                              _confirmDelete(context, topic, chapterId, path);
                             },
                             tileColor: Colors.blueGrey.shade50.withOpacity(0.8),
                             shape: RoundedRectangleBorder(
@@ -484,7 +485,8 @@ void _showTopicOptions(
   );
 }
 
-void _confirmDelete(BuildContext context, TopicModel topic, String chapterId) {
+void _confirmDelete(
+    BuildContext context, TopicModel topic, String chapterId, String path) {
   showDialog(
     context: context,
     builder: (ctx) => TweenAnimationBuilder(
@@ -553,6 +555,7 @@ void _confirmDelete(BuildContext context, TopicModel topic, String chapterId) {
                   onPressed: () {
                     Navigator.pop(ctx); // Dialogni yopamiz
                     context.read<LibraryBloc>().add(DeleteTopicEvent(
+                          path: path,
                           chapterId: chapterId,
                           topicId: topic.id,
                         ));

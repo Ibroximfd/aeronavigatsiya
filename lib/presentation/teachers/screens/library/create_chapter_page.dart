@@ -7,7 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CreateChapterPage extends StatelessWidget {
-  const CreateChapterPage({super.key});
+  final String path;
+  const CreateChapterPage({super.key, required this.path});
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +365,7 @@ class CreateChapterPage extends StatelessWidget {
                                                     );
 
                                                     bloc.add(CreateChapterEvent(
-                                                        chapter));
+                                                        chapter, path));
                                                   },
                                             icon: Icon(
                                               Icons.upload,

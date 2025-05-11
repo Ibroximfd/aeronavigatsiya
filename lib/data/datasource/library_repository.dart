@@ -5,13 +5,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class LibraryRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> createChapter(ChapterModel chapter) async {
-    await _firestore.collection('library').doc(chapter.id).set(chapter.toMap());
+  Future<void> createChapter(ChapterModel chapter, String collection) async {
+    await _firestore
+        .collection(collection)
+        .doc(chapter.id)
+        .set(chapter.toMap());
   }
 
-  Future<void> createTopic(String chapterId, TopicModel topic) async {
+  Future<void> createTopic(
+      String chapterId, TopicModel topic, String collection) async {
     await _firestore
-        .collection('library')
+        .collection(collection)
         .doc(chapterId)
         .collection('topics')
         .add(topic.toJson());
