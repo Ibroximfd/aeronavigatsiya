@@ -25,48 +25,9 @@ class StudentChaptersPage extends StatelessWidget {
           slivers: [
             // Custom SliverAppBar
             SliverAppBar(
-              expandedHeight: 120.h,
+              expandedHeight: 60.h,
               pinned: true,
               backgroundColor: Colors.transparent,
-              flexibleSpace: FlexibleSpaceBar(
-                title: ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [Colors.blue.shade600, Colors.blue.shade900],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ).createShader(bounds),
-                  child: Text(
-                    "Boblar",
-                    style: TextStyle(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4,
-                          color: Colors.black45,
-                          offset: Offset(1, 1),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.blue.shade300,
-                        Colors.blue.shade500,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(24),
-                    ),
-                  ),
-                ),
-              ),
             ),
             // StreamBuilder for Firestore data
             SliverToBoxAdapter(

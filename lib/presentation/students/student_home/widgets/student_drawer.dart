@@ -1,8 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:aviatoruz/presentation/teachers/screens/auth/login_page.dart';
 import 'package:aviatoruz/presentation/teachers/screens/home/widgets/my_bottom_sheet.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -65,7 +63,7 @@ class StudentDrawer extends StatelessWidget {
                                 end: Alignment.bottomRight,
                               ).createShader(bounds),
                               child: Text(
-                                "AERONAVIGATISYA",
+                                "AERONAVIGATSIYA",
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w800,
@@ -259,19 +257,6 @@ class StudentDrawer extends StatelessWidget {
                                   return const MyBottomSheet();
                                 },
                               );
-                            },
-                          ),
-                          _buildListTile(
-                            context,
-                            icon: CupertinoIcons.profile_circled,
-                            title: "Admin panel",
-                            iconColor: Colors.grey.shade600,
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  CupertinoDialogRoute(
-                                      builder: (context) => LoginPage(),
-                                      context: context));
                             },
                           ),
                         ],

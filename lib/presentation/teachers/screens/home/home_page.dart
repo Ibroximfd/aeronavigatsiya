@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                     end: Alignment.bottomRight,
                   ).createShader(bounds),
                   child: Text(
-                    "AERONAVIGATISYA",
+                    "AERONAVIGATSIYA",
                     style: TextStyle(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w800,
@@ -133,7 +133,7 @@ class HomePage extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16.r),
                                   child: Image.asset(
-                                    "assets/images/metrologiya.png",
+                                    "assets/images/HHB.png",
                                     height: height * .2,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
@@ -184,7 +184,7 @@ class HomePage extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16.r),
                                   child: Image.asset(
-                                    "assets/images/test.png",
+                                    "assets/images/AKT.png",
                                     height: height * .16,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
@@ -210,7 +210,57 @@ class HomePage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 40.h), // Adjusted for no FAB
+                            SizedBox(height: 40.h),
+                            // Test Card
+                            GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.95),
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  border: Border.all(
+                                    color: Colors.blue.shade200,
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.blue.shade100.withOpacity(0.4),
+                                      spreadRadius: 2,
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  child: Image.asset(
+                                    "assets/images/Radio.png",
+                                    height: height * .16,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                    frameBuilder: (context, child, frame,
+                                        wasSynchronouslyLoaded) {
+                                      if (wasSynchronouslyLoaded) return child;
+                                      return frame != null
+                                          ? child
+                                          : Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade200,
+                                              highlightColor:
+                                                  Colors.blue.shade100,
+                                              period: const Duration(
+                                                  milliseconds: 1200),
+                                              child: Container(
+                                                height: height * .16,
+                                                width: double.infinity,
+                                                color: Colors.grey.shade200,
+                                              ),
+                                            );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

@@ -31,7 +31,7 @@ class SplashPage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           body: Center(
-            child: Lottie.asset("assets/images/aviatoruz_splash.json"),
+            child: Lottie.asset("assets/images/splash_animation.json"),
           ),
         ),
       ),
