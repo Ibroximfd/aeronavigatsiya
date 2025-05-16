@@ -22,8 +22,8 @@ class StudentHomePage extends StatelessWidget {
 
     List<String> images = [
       "assets/images/HHB.png",
-      "assets/images/AKT.png",
       "assets/images/Radio.png",
+      "assets/images/AKT.png",
     ];
 
     List<String> paths = [
