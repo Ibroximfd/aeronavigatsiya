@@ -20,26 +20,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
-class VideosPage extends StatelessWidget {
-  const VideosPage({super.key});
+class TeacherVideosPage extends StatelessWidget {
+  const TeacherVideosPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => VideosBloc()..add(LoadVideos()),
-      child: const _VideosView(),
+      child: const _TeacherVideosView(),
     );
   }
 }
 
-class _VideosView extends StatefulWidget {
-  const _VideosView();
+class _TeacherVideosView extends StatefulWidget {
+  const _TeacherVideosView();
 
   @override
-  State<_VideosView> createState() => _VideosViewState();
+  State<_TeacherVideosView> createState() => _TeacherVideosViewState();
 }
 
-class _VideosViewState extends State<_VideosView>
+class _TeacherVideosViewState extends State<_TeacherVideosView>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -63,7 +63,6 @@ class _VideosViewState extends State<_VideosView>
     super.dispose();
   }
 
-  // YouTube video ID ni olish
   String _extractYouTubeId(String url) {
     final regex = RegExp(r'(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)');
     final match = regex.firstMatch(url);
@@ -81,7 +80,7 @@ class _VideosViewState extends State<_VideosView>
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.red.shade50, Colors.white],
+            colors: [Colors.blueGrey.shade50, Colors.white],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -113,7 +112,10 @@ class _VideosViewState extends State<_VideosView>
                   background: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.red.shade300, Colors.red.shade500],
+                        colors: [
+                          Colors.blueGrey.shade200,
+                          Colors.blueGrey.shade400,
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -148,7 +150,7 @@ class _VideosViewState extends State<_VideosView>
                               padding: const EdgeInsets.only(bottom: 12),
                               child: Shimmer.fromColors(
                                 baseColor: Colors.grey.shade200,
-                                highlightColor: Colors.red.shade50,
+                                highlightColor: Colors.blueGrey.shade50,
                                 period: const Duration(milliseconds: 1200),
                                 child: Container(
                                   height: 120,
@@ -156,7 +158,7 @@ class _VideosViewState extends State<_VideosView>
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: Colors.red.shade100,
+                                      color: Colors.blueGrey.shade100,
                                     ),
                                   ),
                                 ),
@@ -170,7 +172,6 @@ class _VideosViewState extends State<_VideosView>
                           return const Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.video_library_outlined,
@@ -204,7 +205,7 @@ class _VideosViewState extends State<_VideosView>
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red.shade700,
+                                color: Colors.blueGrey.shade600,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -243,7 +244,7 @@ class _VideosViewState extends State<_VideosView>
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text("Yangi video qo'shildi ✅"),
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.blueGrey,
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -254,7 +255,7 @@ class _VideosViewState extends State<_VideosView>
           'Yangi Video',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.red.shade600,
+        backgroundColor: Colors.blueGrey.shade600,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
@@ -264,7 +265,7 @@ class _VideosViewState extends State<_VideosView>
     final thumbnailUrl = _getThumbnailUrl(video.videoUrl);
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: 1),
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       builder: (context, double value, child) {
         return Transform.translate(
           offset: Offset(20 * (1 - value), 0),
@@ -273,10 +274,10 @@ class _VideosViewState extends State<_VideosView>
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.95),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.red.shade100, width: 1.5),
+              border: Border.all(color: Colors.blueGrey.shade100, width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.red.shade50.withOpacity(0.4),
+                  color: Colors.blueGrey.shade50.withOpacity(0.4),
                   spreadRadius: 2,
                   blurRadius: 8,
                   offset: const Offset(0, 3),
@@ -305,15 +306,16 @@ class _VideosViewState extends State<_VideosView>
                         child: Image.network(
                           thumbnailUrl,
                           width: 120,
+                          height: 90,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               Container(
-                                width: 100,
-                                height: 60,
+                                width: 120,
+                                height: 90,
                                 color: Colors.grey.shade200,
                                 child: const Icon(
                                   Icons.play_circle_outline,
-                                  size: 30,
+                                  size: 40,
                                   color: Colors.grey,
                                 ),
                               ),
@@ -351,7 +353,7 @@ class _VideosViewState extends State<_VideosView>
                                 const Icon(
                                   Icons.schedule,
                                   size: 16,
-                                  color: Colors.blueAccent,
+                                  color: Colors.grey,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(

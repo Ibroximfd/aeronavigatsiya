@@ -89,9 +89,11 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: FlexibleSpaceBar(
                     title: Text(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       _buildGreeting(),
                       style: TextStyle(
-                        fontSize: 20.sp,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
                         letterSpacing: 0.5,
@@ -277,9 +279,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
   String _buildGreeting() {
     if (name == null) return "Yuklanmoqda...";
     if (role == 'teacher' || role == 'teacher_pending') {
-      return "Salom, ustoz $name";
+      return "Salom👋, ustoz $name";
     } else {
-      return "Salom, o‘quvchi $name";
+      return "Salom👋, o‘quvchi $name";
     }
   }
 }

@@ -2,8 +2,8 @@ import 'package:aeronavigatsiya/core/services/auth_service.dart';
 import 'package:aeronavigatsiya/presentation/students/student_main_oage/student_main_page.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/auth/widgets/wait_verification_page.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/auth/widgets/went_wrong_page.dart';
-import 'package:aeronavigatsiya/presentation/teachers/screens/teacher_home/teacher_home_page.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/auth/login_page.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/teacher_main_page/teacher_main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +40,7 @@ class AuthGate extends StatelessWidget {
               final role = roleSnapshot.data ?? "student";
 
               if (role == "teacher") {
-                return const TeacherHomePage();
+                return const TeacherMainPage();
               } else if (role == "student") {
                 return const StudentMainPage();
               } else {

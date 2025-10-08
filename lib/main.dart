@@ -6,7 +6,7 @@ import 'package:aeronavigatsiya/presentation/teachers/bloc/privacy/privacy_bloc.
 import 'package:aeronavigatsiya/presentation/teachers/bloc/splash/splash_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/splash/splash_event.dart';
 import 'package:aeronavigatsiya/firebase_options.dart';
-import 'package:aeronavigatsiya/presentation/teachers/screens/auth/auth_gate.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
               quill.FlutterQuillLocalizations.delegate, // 👉 MUHIM QATOR
             ],
-            home: const AuthGate(),
+            home: const SplashPage(),
           );
         },
       ),

@@ -1,7 +1,7 @@
-import 'package:aeronavigatsiya/presentation/students/student_main_oage/student_main_page.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/splash/splash_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/splash/splash_event.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/splash/splash_state.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/auth/auth_gate.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/splash/privacy_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +19,7 @@ class SplashPage extends StatelessWidget {
           if (state is NavigateToHome) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => StudentMainPage()),
+              MaterialPageRoute(builder: (_) => AuthGate()),
             );
           } else if (state is NavigateToPrivacy) {
             Navigator.pushReplacement(
