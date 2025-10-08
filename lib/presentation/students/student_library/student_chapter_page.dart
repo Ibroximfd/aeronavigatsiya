@@ -104,8 +104,11 @@ class StudentChaptersPage extends StatelessWidget {
 
                   // Map Firestore data to ChapterModel
                   final chapters = snapshot.data!.docs
-                      .map((doc) => ChapterModel.fromJson(
-                          doc.data() as Map<String, dynamic>))
+                      .map(
+                        (doc) => ChapterModel.fromJson(
+                          doc.data() as Map<String, dynamic>,
+                        ),
+                      )
                       .toList();
 
                   // Build the list of chapters
@@ -115,11 +118,13 @@ class StudentChaptersPage extends StatelessWidget {
                       children: chapters
                           .asMap()
                           .entries
-                          .map((entry) => _buildChapterItem(
-                                context,
-                                entry.value,
-                                entry.key,
-                              ))
+                          .map(
+                            (entry) => _buildChapterItem(
+                              context,
+                              entry.value,
+                              entry.key,
+                            ),
+                          )
                           .toList(),
                     ),
                   );
@@ -133,7 +138,10 @@ class StudentChaptersPage extends StatelessWidget {
   }
 
   Widget _buildChapterItem(
-      BuildContext context, ChapterModel chapter, int index) {
+    BuildContext context,
+    ChapterModel chapter,
+    int index,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -156,10 +164,8 @@ class StudentChaptersPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => StudentTopicListPage(
-                  chapterId: chapter.id,
-                  path: path,
-                ),
+                builder: (_) =>
+                    StudentTopicListPage(chapterId: chapter.id, path: path),
               ),
             );
           },

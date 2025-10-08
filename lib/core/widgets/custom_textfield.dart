@@ -6,22 +6,22 @@ class CostumTextField extends StatelessWidget {
   final bool obscureText;
   final double height;
   final Widget? suffixIcon;
-  const CostumTextField(
-      {super.key,
-      required this.controller,
-      this.height = 44,
-      this.suffixIcon,
-      this.obscureText = false});
+  final TextInputType? keyboardType;
+  const CostumTextField({
+    super.key,
+    required this.controller,
+    this.height = 44,
+    this.suffixIcon,
+    this.obscureText = false,
+    this.keyboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
       child: TextField(
-        style: GoogleFonts.nunitoSans(
-          fontSize: 20,
-          color: Colors.black87,
-        ),
+        style: GoogleFonts.nunitoSans(fontSize: 20, color: Colors.black87),
         obscureText: obscureText,
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,

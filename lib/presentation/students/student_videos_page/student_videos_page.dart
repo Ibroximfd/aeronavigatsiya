@@ -76,7 +76,7 @@ class _StudentVideosViewState extends State<_StudentVideosView>
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.red.shade50, Colors.white],
+            colors: [Colors.blueGrey.shade50, Colors.white],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -108,7 +108,10 @@ class _StudentVideosViewState extends State<_StudentVideosView>
                   background: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.red.shade300, Colors.red.shade500],
+                        colors: [
+                          Colors.blueGrey.shade200,
+                          Colors.blueGrey.shade400,
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -143,7 +146,7 @@ class _StudentVideosViewState extends State<_StudentVideosView>
                               padding: const EdgeInsets.only(bottom: 12),
                               child: Shimmer.fromColors(
                                 baseColor: Colors.grey.shade200,
-                                highlightColor: Colors.red.shade50,
+                                highlightColor: Colors.blueGrey.shade50,
                                 period: const Duration(milliseconds: 1200),
                                 child: Container(
                                   height: 120,
@@ -151,7 +154,7 @@ class _StudentVideosViewState extends State<_StudentVideosView>
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: Colors.red.shade100,
+                                      color: Colors.blueGrey.shade100,
                                     ),
                                   ),
                                 ),
@@ -199,7 +202,7 @@ class _StudentVideosViewState extends State<_StudentVideosView>
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red.shade700,
+                                color: Colors.blueGrey.shade600,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -241,10 +244,10 @@ class _StudentVideosViewState extends State<_StudentVideosView>
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.95),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.red.shade100, width: 1.5),
+              border: Border.all(color: Colors.blueGrey.shade100, width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.red.shade50.withOpacity(0.4),
+                  color: Colors.blueGrey.shade50.withOpacity(0.4),
                   spreadRadius: 2,
                   blurRadius: 8,
                   offset: const Offset(0, 3),
@@ -320,7 +323,7 @@ class _StudentVideosViewState extends State<_StudentVideosView>
                                 const Icon(
                                   Icons.schedule,
                                   size: 16,
-                                  color: Colors.blueAccent,
+                                  color: Colors.grey,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(

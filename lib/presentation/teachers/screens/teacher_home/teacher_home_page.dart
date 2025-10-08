@@ -2,14 +2,14 @@
 
 import 'package:aeronavigatsiya/core/config/network_constants.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/library/chapter_page.dart';
-import 'package:aeronavigatsiya/presentation/teachers/screens/home/widgets/my_drawer.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/teacher_home/widgets/my_drawer.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/videos/videos_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class TeacherHomePage extends StatelessWidget {
+  const TeacherHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

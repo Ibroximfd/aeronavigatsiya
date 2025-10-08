@@ -1,21 +1,51 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:ui';
 import 'package:aeronavigatsiya/core/config/network_constants.dart';
 import 'package:aeronavigatsiya/presentation/students/student_home/widgets/student_drawer.dart';
 import 'package:aeronavigatsiya/presentation/students/student_library/student_chapter_page.dart';
-import 'package:aeronavigatsiya/presentation/students/student_videos_page/student_videos_page.dart';
-import 'package:aeronavigatsiya/presentation/teachers/screens/auth/login_page.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
-class StudentHomePage extends StatelessWidget {
+class StudentHomePage extends StatefulWidget {
   const StudentHomePage({super.key});
+
+  @override
+  State<StudentHomePage> createState() => _StudentHomePageState();
+}
+
+class _StudentHomePageState extends State<StudentHomePage> {
+  String? name;
+  String? role;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final data = doc.data();
+      setState(() {
+        name = data?['name'] ?? user.displayName ?? 'Foydalanuvchi';
+        role = data?['role'] ?? 'student';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+
     List<String> titles = [
       "Havodagi harakatni boshqarish",
       "Radioelektron qurilmalar va tizimlar (Aviatsiya)",
@@ -33,55 +63,49 @@ class StudentHomePage extends StatelessWidget {
       NetworkConstants.aktLibrary,
       NetworkConstants.radioLibrary,
     ];
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade100, Colors.white],
+            colors: [Colors.grey.shade100, Colors.white],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: CustomScrollView(
           slivers: [
-            // Custom SliverAppBar
+            // Glassmorphism SliverAppBar
             SliverAppBar(
-              centerTitle: true,
               pinned: true,
+              centerTitle: true,
               backgroundColor: Colors.transparent,
-              flexibleSpace: FlexibleSpaceBar(
-                title: ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [Colors.blue.shade600, Colors.blue.shade900],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ).createShader(bounds),
-                  child: Text(
-                    "AERONAVIGATSIYA",
-                    style: TextStyle(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black38,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4,
-                          color: Colors.black45,
-                          offset: Offset(1, 1),
-                        ),
-                      ],
-                    ),
-                  ),
+              flexibleSpace: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
                 ),
-                background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.blue.shade300, Colors.blue.shade500],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: FlexibleSpaceBar(
+                    title: Text(
+                      _buildGreeting(),
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                        letterSpacing: 0.5,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 2,
+                            color: Colors.black.withOpacity(0.1),
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
                     ),
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(24),
+                    background: Container(
+                      color: Colors.white.withOpacity(0.15),
                     ),
                   ),
                 ),
@@ -92,35 +116,19 @@ class StudentHomePage extends StatelessWidget {
                     Icons.menu,
                     color: Colors.black87,
                     size: 28.sp,
-                    shadows: [Shadow(blurRadius: 4, color: Colors.black45)],
+                    shadows: [
+                      Shadow(
+                        blurRadius: 2,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
                   ),
                   onPressed: () => Scaffold.of(context).openDrawer(),
                 ),
               ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StudentVideosPage(),
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.play_circle_fill, size: 30.sp),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
-                  },
-                  icon: Icon(Icons.settings, size: 30.sp),
-                ),
-              ],
             ),
-            // Content
+
+            // Body content
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20),
@@ -134,91 +142,119 @@ class StudentHomePage extends StatelessWidget {
                       child: Transform.translate(
                         offset: Offset(0, 20 * (1 - value)),
                         child: Column(
-                          spacing: 20.h,
+                          mainAxisSize: MainAxisSize.min,
                           children: List.generate(3, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        StudentChaptersPage(path: paths[index]),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.95),
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 20.h),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => StudentChaptersPage(
+                                        path: paths[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16.r),
-                                  border: Border.all(
-                                    color: Colors.blue.shade200,
-                                    width: 1.5,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.blue.shade100.withOpacity(
-                                        0.4,
-                                      ),
-                                      spreadRadius: 2,
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 3),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 10,
+                                      sigmaY: 10,
                                     ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(16.r),
-                                      child: Image.asset(
-                                        images[index],
-                                        height: height * .2,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                        frameBuilder:
-                                            (
-                                              context,
-                                              child,
-                                              frame,
-                                              wasSynchronouslyLoaded,
-                                            ) {
-                                              if (wasSynchronouslyLoaded) {
-                                                return child;
-                                              }
-                                              return frame != null
-                                                  ? child
-                                                  : Shimmer.fromColors(
-                                                      baseColor:
-                                                          Colors.grey.shade200,
-                                                      highlightColor:
-                                                          Colors.blue.shade100,
-                                                      period: const Duration(
-                                                        milliseconds: 1200,
-                                                      ),
-                                                      child: Container(
-                                                        height: height * .2,
-                                                        width: double.infinity,
-                                                        color: Colors
-                                                            .grey
-                                                            .shade200,
-                                                      ),
-                                                    );
-                                            },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Center(
-                                        child: Text(
-                                          titles[index],
-                                          style: TextStyle(
-                                            fontSize: 24.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(
+                                          16.r,
                                         ),
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.3),
+                                          width: 1,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.05,
+                                            ),
+                                            spreadRadius: 1,
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(16.r),
+                                            ),
+                                            child: Image.asset(
+                                              images[index],
+                                              height: height * .2,
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                              frameBuilder:
+                                                  (
+                                                    context,
+                                                    child,
+                                                    frame,
+                                                    wasSynchronouslyLoaded,
+                                                  ) {
+                                                    if (wasSynchronouslyLoaded) {
+                                                      return child;
+                                                    }
+                                                    return frame != null
+                                                        ? child
+                                                        : Shimmer.fromColors(
+                                                            baseColor: Colors
+                                                                .grey
+                                                                .shade200,
+                                                            highlightColor:
+                                                                Colors
+                                                                    .grey
+                                                                    .shade100,
+                                                            period:
+                                                                const Duration(
+                                                                  milliseconds:
+                                                                      1200,
+                                                                ),
+                                                            child: Container(
+                                                              height:
+                                                                  height * .2,
+                                                              width: double
+                                                                  .infinity,
+                                                              color: Colors
+                                                                  .grey
+                                                                  .shade200,
+                                                            ),
+                                                          );
+                                                  },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(16.w),
+                                            child: Center(
+                                              child: Text(
+                                                titles[index],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black87,
+                                                  letterSpacing: 0.5,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             );
@@ -235,5 +271,15 @@ class StudentHomePage extends StatelessWidget {
       ),
       drawer: const StudentDrawer(),
     );
+  }
+
+  /// Salomlashuv matnini yaratish
+  String _buildGreeting() {
+    if (name == null) return "Yuklanmoqda...";
+    if (role == 'teacher' || role == 'teacher_pending') {
+      return "Salom, ustoz $name";
+    } else {
+      return "Salom, o‘quvchi $name";
+    }
   }
 }

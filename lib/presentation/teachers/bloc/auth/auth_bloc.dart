@@ -6,34 +6,90 @@ import 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<LoginRequested>(_onLoginRequested);
-
-    on<LogOutEvent>((event, emit) async {
-      emit(AuthLoading());
-      try {
-        await AuthService.logOut();
-        emit(AuthLoggedOut());
-      } catch (e) {
-        emit(AuthFailure('Chiqishda xatolik yuz berdi: ${e.toString()}'));
-      }
-    });
+    on<RegisterRequested>(_onRegisterRequested);
+    on<LogOutEvent>(_onLogOutEvent);
+    on<DeleteAccountEvent>(_onDeleteAccountEvent);
   }
 
+  // === LOGIN ===
   Future<void> _onLoginRequested(
-      LoginRequested event, Emitter<AuthState> emit) async {
+    LoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     try {
       final user = await AuthService.loginUser(
         email: event.email,
         password: event.password,
       );
-
       if (user != null) {
-        emit(AuthSuccess());
+        final role = await AuthService.getUserRole(user.uid);
+        emit(AuthSuccess(role));
       } else {
-        emit(AuthFailure("User not found"));
+        emit(const AuthFailure("Foydalanuvchi topilmadi"));
       }
     } catch (e) {
       emit(AuthFailure(e.toString()));
+    }
+  }
+
+  // === REGISTER ===
+  Future<void> _onRegisterRequested(
+    RegisterRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      final user = await AuthService.registerUser(
+        name: event.name,
+        email: event.email,
+        password: event.password,
+        isTeacher: event.isTeacher,
+      );
+
+      if (user != null) {
+        if (event.isTeacher) {
+          emit(
+            const AuthRegistered(
+              "Email tasdiqlash havolasi yuborildi. Iltimos, pochtangizni tekshiring. Admin tasdiqlamaguncha kira olmaysiz.",
+            ),
+          );
+        } else {
+          emit(const AuthRegistered("Student akkauntingiz yaratildi."));
+        }
+      } else {
+        emit(const AuthFailure("Ro‘yxatdan o‘tishda xatolik"));
+      }
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+    }
+  }
+
+  // === LOGOUT ===
+  Future<void> _onLogOutEvent(
+    LogOutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await AuthService.logOut();
+      emit(AuthLoggedOut());
+    } catch (e) {
+      emit(AuthFailure("Chiqishda xatolik: $e"));
+    }
+  }
+
+  // === DELETE ACCOUNT ===
+  Future<void> _onDeleteAccountEvent(
+    DeleteAccountEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await AuthService.deleteAccount();
+      emit(AuthDeleted());
+    } catch (e) {
+      emit(AuthFailure("Akkountni o‘chirishda xatolik: $e"));
     }
   }
 }

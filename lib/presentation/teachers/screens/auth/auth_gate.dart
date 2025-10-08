@@ -1,5 +1,9 @@
-import 'package:aeronavigatsiya/presentation/teachers/screens/home/home_page.dart';
-import 'package:aeronavigatsiya/presentation/teachers/screens/splash/splash_page.dart';
+import 'package:aeronavigatsiya/core/services/auth_service.dart';
+import 'package:aeronavigatsiya/presentation/students/student_main_oage/student_main_page.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/auth/widgets/wait_verification_page.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/auth/widgets/went_wrong_page.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/teacher_home/teacher_home_page.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/auth/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -9,21 +13,43 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(), // foydalanuvchi holati
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Ma'lumotlarni tekshiryapti
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
-        } else if (snapshot.hasData) {
-          // Agar foydalanuvchi tizimga kirgan bo'lsa
-          return const HomePage();
+        }
+
+        if (snapshot.hasData) {
+          final user = snapshot.data!;
+          return FutureBuilder<String>(
+            future: AuthService.getUserRole(user.uid),
+            builder: (context, roleSnapshot) {
+              if (roleSnapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Center(child: CircularProgressIndicator.adaptive()),
+                );
+              }
+
+              if (roleSnapshot.hasError) {
+                return WentWrongPage(snapshot: roleSnapshot);
+              }
+
+              final role = roleSnapshot.data ?? "student";
+
+              if (role == "teacher") {
+                return const TeacherHomePage();
+              } else if (role == "student") {
+                return const StudentMainPage();
+              } else {
+                return WaitVerificationPage();
+              }
+            },
+          );
         } else {
-          // Agar foydalanuvchi login qilmagan bo'lsa
-          return const SplashPage();
+          return const LoginPage();
         }
       },
     );

@@ -1,7 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:aeronavigatsiya/presentation/teachers/screens/home/widgets/my_bottom_sheet.dart';
+import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_bloc.dart';
+import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_event.dart';
+import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_state.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/auth/auth_gate.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/teacher_home/widgets/my_bottom_sheet.dart';
+import 'package:flutter/cupertino.dart' show CupertinoDialogRoute;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
 class StudentDrawer extends StatelessWidget {
@@ -11,18 +17,31 @@ class StudentDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.grey.shade100, Colors.white],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthLoggedOut) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              CupertinoDialogRoute(
+                builder: (context) => AuthGate(),
+                context: context,
+              ),
+              (route) => false,
+            );
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.grey.shade100, Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TweenAnimationBuilder(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TweenAnimationBuilder(
                 tween: Tween<double>(begin: 0, end: 1),
                 duration: const Duration(milliseconds: 600),
                 curve: Curves.easeOutCubic,
@@ -57,7 +76,7 @@ class StudentDrawer extends StatelessWidget {
                               shaderCallback: (bounds) => LinearGradient(
                                 colors: [
                                   Colors.blue.shade600,
-                                  Colors.blue.shade900
+                                  Colors.blue.shade900,
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -120,8 +139,9 @@ class StudentDrawer extends StatelessWidget {
                             iconColor: Colors.green.shade600,
                             onTap: () {
                               Share.share(
-                                  'check out my website https://example.com',
-                                  subject: 'Look what I made!');
+                                'check out my website https://example.com',
+                                subject: 'Look what I made!',
+                              );
                             },
                           ),
                           _buildListTile(
@@ -138,11 +158,24 @@ class StudentDrawer extends StatelessWidget {
                               );
                             },
                           ),
+                          const Spacer(),
+                          _buildListTile(
+                            context,
+                            icon: Icons.exit_to_app,
+                            title: "Chiqish",
+                            iconColor: Colors.red.shade600,
+                            onTap: () async {
+                              context.read<AuthBloc>().add(LogOutEvent());
+                            },
+                          ),
+                          const SizedBox(height: 40),
                         ],
                       ),
                     ),
                   );
-                }),
+                },
+              ),
+            ),
           ),
         ),
       ),
@@ -168,10 +201,7 @@ class StudentDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.95),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.grey.shade200,
-                width: 1.5,
-              ),
+              border: Border.all(color: Colors.grey.shade200, width: 1.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.shade100.withOpacity(0.4),
@@ -182,11 +212,7 @@ class StudentDrawer extends StatelessWidget {
               ],
             ),
             child: ListTile(
-              leading: Icon(
-                icon,
-                color: iconColor,
-                size: 28,
-              ),
+              leading: Icon(icon, color: iconColor, size: 28),
               title: Text(
                 title,
                 style: const TextStyle(
@@ -199,8 +225,10 @@ class StudentDrawer extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
             ),
           ),
         );
@@ -208,8 +236,11 @@ class StudentDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomDialog(BuildContext context,
-      {required String title, required String content}) {
+  Widget _buildCustomDialog(
+    BuildContext context, {
+    required String title,
+    required String content,
+  }) {
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: 1),
       duration: const Duration(milliseconds: 300),
@@ -258,12 +289,14 @@ class StudentDrawer extends StatelessWidget {
                           onPressed: () => Navigator.pop(context),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 16),
+                              vertical: 8,
+                              horizontal: 16,
+                            ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
                                   Colors.blue.shade600,
-                                  Colors.blue.shade800
+                                  Colors.blue.shade800,
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(8),

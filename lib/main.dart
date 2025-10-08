@@ -1,3 +1,4 @@
+import 'package:aeronavigatsiya/presentation/students/blocs/bloc/student_main_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/home/home_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/library/library_bloc.dart';
@@ -15,9 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
 }
@@ -34,6 +33,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => LibraryBloc()),
+        BlocProvider(create: (_) => StudentMainBloc()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 930),
@@ -53,9 +53,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            supportedLocales: const [
-              Locale('en', 'US'),
-            ],
+            supportedLocales: const [Locale('en', 'US')],
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
