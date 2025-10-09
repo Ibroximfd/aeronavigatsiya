@@ -19,15 +19,19 @@ class StudentDrawer extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthLoggedOut) {
+          if (state is AuthLoggedOut || state is AuthDeleted) {
             Navigator.pushAndRemoveUntil(
               context,
               CupertinoDialogRoute(
-                builder: (context) => AuthGate(),
+                builder: (context) => const AuthGate(),
                 context: context,
               ),
               (route) => false,
             );
+          } else if (state is AuthFailure) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: Container(
@@ -81,7 +85,7 @@ class StudentDrawer extends StatelessWidget {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ).createShader(bounds),
-                              child: Text(
+                              child: const Text(
                                 "AERONAVIGATSIYA",
                                 style: TextStyle(
                                   fontSize: 20,
@@ -97,7 +101,7 @@ class StudentDrawer extends StatelessWidget {
                             thickness: 1,
                             height: 20,
                           ),
-                          // List Tiles
+                          // Info tile
                           _buildListTile(
                             context,
                             icon: Icons.info_outline,
@@ -115,6 +119,8 @@ class StudentDrawer extends StatelessWidget {
                               );
                             },
                           ),
+
+                          // Authors
                           _buildListTile(
                             context,
                             icon: Icons.person,
@@ -132,6 +138,8 @@ class StudentDrawer extends StatelessWidget {
                               );
                             },
                           ),
+
+                          // Share
                           _buildListTile(
                             context,
                             icon: Icons.share,
@@ -144,10 +152,12 @@ class StudentDrawer extends StatelessWidget {
                               );
                             },
                           ),
+
+                          // Contact
                           _buildListTile(
                             context,
                             icon: Icons.call,
-                            title: "Biz bilan bog`lanish",
+                            title: "Biz bilan bog‘lanish",
                             iconColor: Colors.blue.shade600,
                             onTap: () {
                               showModalBottomSheet(
@@ -158,15 +168,25 @@ class StudentDrawer extends StatelessWidget {
                               );
                             },
                           ),
+
+                          // Delete account
+                          _buildListTile(
+                            context,
+                            icon: Icons.delete_forever,
+                            title: "Akkountni o‘chirish",
+                            iconColor: Colors.orange.shade700,
+                            onTap: () => _confirmDelete(context),
+                          ),
+
                           const Spacer(),
+
+                          // Logout
                           _buildListTile(
                             context,
                             icon: Icons.exit_to_app,
                             title: "Chiqish",
                             iconColor: Colors.red.shade600,
-                            onTap: () async {
-                              context.read<AuthBloc>().add(LogOutEvent());
-                            },
+                            onTap: () => _confirmLogout(context),
                           ),
                           const SizedBox(height: 40),
                         ],
@@ -182,6 +202,172 @@ class StudentDrawer extends StatelessWidget {
     );
   }
 
+  /// ✅ Logout confirmation dialog
+  Future<void> _confirmLogout(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => _buildConfirmDialog(
+        context,
+        title: "Chiqish",
+        message: "Haqiqatan ham tizimdan chiqmoqchimisiz?",
+        confirmText: "Ha, chiqish",
+      ),
+    );
+
+    if (result == true) {
+      context.read<AuthBloc>().add(LogOutEvent());
+    }
+  }
+
+  /// ✅ Delete account confirmation dialog
+  Future<void> _confirmDelete(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => _buildConfirmDialog(
+        context,
+        title: "Akkountni o‘chirish",
+        message:
+            "Rostdan ham akkountni o‘chirilsinmi? Bu amalni qaytarib bo‘lmaydi!",
+        confirmText: "Ha, o‘chirilsin",
+      ),
+    );
+
+    if (result == true) {
+      context.read<AuthBloc>().add(DeleteAccountEvent());
+    }
+  }
+
+  /// 🧱 General Confirm Dialog (reusable)
+  Widget _buildConfirmDialog(
+    BuildContext context, {
+    required String title,
+    required String message,
+    required String confirmText,
+  }) {
+    return AlertDialog(
+      backgroundColor: Colors.white.withOpacity(0.95),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200, width: 1.5),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),
+      ),
+      content: Text(
+        message,
+        style: const TextStyle(
+          fontSize: 15,
+          color: Colors.black54,
+          height: 1.4,
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: const Text("Bekor qilish"),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          onPressed: () => Navigator.pop(context, true),
+          child: Text(confirmText, style: const TextStyle(color: Colors.white)),
+        ),
+      ],
+    );
+  }
+
+  /// 🧱 Info dialogs (already existed)
+  Widget _buildCustomDialog(
+    BuildContext context, {
+    required String title,
+    required String content,
+  }) {
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+      builder: (context, double value, child) {
+        return Transform.scale(
+          scale: 0.8 + (0.2 * value),
+          child: Opacity(
+            opacity: value,
+            child: AlertDialog(
+              backgroundColor: Colors.white.withOpacity(0.95),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: BorderSide(color: Colors.grey.shade200, width: 1.5),
+              ),
+              elevation: 8,
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        content,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue.shade600,
+                                  Colors.blue.shade800,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text(
+                              "OK",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 🧱 Tile builder
   Widget _buildListTile(
     BuildContext context, {
     required IconData icon,
@@ -228,93 +414,6 @@ class StudentDrawer extends StatelessWidget {
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 4,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCustomDialog(
-    BuildContext context, {
-    required String title,
-    required String content,
-  }) {
-    return TweenAnimationBuilder(
-      tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutCubic,
-      builder: (context, double value, child) {
-        return Transform.scale(
-          scale: 0.8 + (0.2 * value),
-          child: Opacity(
-            opacity: value,
-            child: AlertDialog(
-              backgroundColor: Colors.white.withOpacity(0.95),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: Colors.grey.shade200, width: 1.5),
-              ),
-              elevation: 8,
-              contentPadding: EdgeInsets.zero,
-              content: Container(
-                padding: const EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        content,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black54,
-                          height: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.blue.shade600,
-                                  Colors.blue.shade800,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Text(
-                              "OK",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ),

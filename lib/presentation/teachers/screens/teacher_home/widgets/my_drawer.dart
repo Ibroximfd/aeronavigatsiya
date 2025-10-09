@@ -16,15 +16,20 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthLoggedOut) {
+        if (state is AuthLoggedOut || state is AuthDeleted) {
           Navigator.pushAndRemoveUntil(
             context,
             CupertinoDialogRoute(
-              builder: (context) => AuthGate(),
+              builder: (context) => const AuthGate(),
               context: context,
             ),
             (route) => false,
           );
+        }
+        if (state is AuthFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: Drawer(
@@ -41,98 +46,164 @@ class MyDrawer extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.easeOutCubic,
-                  builder: (context, double value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Transform.translate(
-                        offset: Offset(-20 * (1 - value), 0),
-                        child: Column(
-                          children: [
-                            // Header
-                            Container(
-                              margin:
-                                  const EdgeInsets.only(top: 16, bottom: 16),
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.95),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.grey.shade200,
-                                  width: 1.5,
+                tween: Tween<double>(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeOutCubic,
+                builder: (context, double value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(-20 * (1 - value), 0),
+                      child: Column(
+                        children: [
+                          // Header
+                          Container(
+                            margin: const EdgeInsets.only(top: 16, bottom: 16),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.95),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.grey.shade200,
+                                width: 1.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade100.withOpacity(0.4),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color:
-                                        Colors.grey.shade100.withOpacity(0.4),
-                                    spreadRadius: 2,
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 3),
-                                  ),
+                              ],
+                            ),
+                            child: ShaderMask(
+                              shaderCallback: (bounds) => LinearGradient(
+                                colors: [
+                                  Colors.blue.shade600,
+                                  Colors.blue.shade900,
                                 ],
-                              ),
-                              child: ShaderMask(
-                                shaderCallback: (bounds) => LinearGradient(
-                                  colors: [
-                                    Colors.blue.shade600,
-                                    Colors.blue.shade900
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ).createShader(bounds),
-                                child: Text(
-                                  "AERONAVIGATISYA",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
-                                  ),
-                                  textAlign: TextAlign.center,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ).createShader(bounds),
+                              child: const Text(
+                                "AERONAVIGATISYA",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                            Divider(
-                              color: Colors.grey.shade300,
-                              thickness: 1,
-                              height: 20,
-                            ),
-                            // List Tiles
-                            _buildListTile(
-                              context,
-                              icon: Icons.share,
-                              title: "Ulashish",
-                              iconColor: Colors.green.shade600,
-                              onTap: () {
-                                Share.share(
-                                    'check out my website https://example.com',
-                                    subject: 'Look what I made!');
-                              },
-                            ),
-                            const Spacer(),
-                            _buildListTile(
-                              context,
-                              icon: Icons.exit_to_app,
-                              title: "Chiqish",
-                              iconColor: Colors.red.shade600,
-                              onTap: () async {
-                                context.read<AuthBloc>().add(LogOutEvent());
-                              },
-                            ),
-                            const SizedBox(
-                              height: 40,
-                            ),
-                          ],
-                        ),
+                          ),
+                          Divider(
+                            color: Colors.grey.shade300,
+                            thickness: 1,
+                            height: 20,
+                          ),
+
+                          // Share tile
+                          _buildListTile(
+                            context,
+                            icon: Icons.share,
+                            title: "Ulashish",
+                            iconColor: Colors.green.shade600,
+                            onTap: () {
+                              Share.share(
+                                'check out my website https://example.com',
+                                subject: 'Look what I made!',
+                              );
+                            },
+                          ),
+
+                          // Delete account tile
+                          _buildListTile(
+                            context,
+                            icon: Icons.delete_forever,
+                            title: "Akkountni o‘chirish",
+                            iconColor: Colors.orange.shade700,
+                            onTap: () => _confirmDelete(context),
+                          ),
+
+                          const Spacer(),
+
+                          // Logout tile
+                          _buildListTile(
+                            context,
+                            icon: Icons.exit_to_app,
+                            title: "Chiqish",
+                            iconColor: Colors.red.shade600,
+                            onTap: () => _confirmLogout(context),
+                          ),
+                          const SizedBox(height: 40),
+                        ],
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// ✅ Logout confirmation dialog
+  Future<void> _confirmLogout(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Chiqish"),
+        content: const Text("Haqiqatan ham tizimdan chiqmoqchimisiz?"),
+        actions: [
+          TextButton(
+            child: const Text("Bekor qilish"),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text("Ha, chiqish", style: TextStyle(color: Colors.white)),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      context.read<AuthBloc>().add(LogOutEvent());
+    }
+  }
+
+  /// ✅ Delete account confirmation dialog
+  Future<void> _confirmDelete(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Akkountni o‘chirish"),
+        content: const Text(
+          "Rostdan ham akkountni o‘chirilsinmi? Bu amalni qaytarib bo‘lmaydi!",
+        ),
+        actions: [
+          TextButton(
+            child: Text("Bekor qilish"),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text(
+              "Ha, o‘chirilsin",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      context.read<AuthBloc>().add(DeleteAccountEvent());
+    }
   }
 
   Widget _buildListTile(
@@ -154,10 +225,7 @@ class MyDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.95),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.grey.shade200,
-                width: 1.5,
-              ),
+              border: Border.all(color: Colors.grey.shade200, width: 1.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.shade100.withOpacity(0.4),
@@ -168,11 +236,7 @@ class MyDrawer extends StatelessWidget {
               ],
             ),
             child: ListTile(
-              leading: Icon(
-                icon,
-                color: iconColor,
-                size: 28,
-              ),
+              leading: Icon(icon, color: iconColor, size: 28),
               title: Text(
                 title,
                 style: const TextStyle(
@@ -185,8 +249,10 @@ class MyDrawer extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
             ),
           ),
         );

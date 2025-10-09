@@ -220,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             /// Login button
                             Container(
-                              height: 50,
+                              height: 60,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Colors.teal.shade600,
