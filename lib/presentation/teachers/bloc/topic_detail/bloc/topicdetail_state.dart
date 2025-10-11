@@ -1,6 +1,5 @@
 import 'package:aeronavigatsiya/data/entity/topic_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 
 abstract class TopicDetailState extends Equatable {
   const TopicDetailState();
@@ -11,14 +10,14 @@ abstract class TopicDetailState extends Equatable {
 
 class TopicDetailLoading extends TopicDetailState {}
 
-class TopicDetailLoaded extends TopicDetailState {
-  final QuillController controller;
+class TopicDetailLoadedHtml extends TopicDetailState {
+  final String contentHtml;
   final TopicModel topic;
 
-  const TopicDetailLoaded({required this.controller, required this.topic});
+  const TopicDetailLoadedHtml({required this.contentHtml, required this.topic});
 
   @override
-  List<Object?> get props => [controller, topic];
+  List<Object?> get props => [contentHtml, topic];
 }
 
 class TopicDetailError extends TopicDetailState {

@@ -32,7 +32,7 @@ class ChaptersPage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             // Custom SliverAppBar
-            SliverAppBar(
+            const SliverAppBar(
               pinned: true,
               backgroundColor: Colors.transparent,
             ),
@@ -109,8 +109,11 @@ class ChaptersPage extends StatelessWidget {
 
                   // Map Firestore data to ChapterModel
                   final chapters = snapshot.data!.docs
-                      .map((doc) => ChapterModel.fromJson(
-                          doc.data() as Map<String, dynamic>))
+                      .map(
+                        (doc) => ChapterModel.fromJson(
+                          doc.data() as Map<String, dynamic>,
+                        ),
+                      )
                       .toList();
 
                   // Build the list of chapters
@@ -120,12 +123,14 @@ class ChaptersPage extends StatelessWidget {
                       children: chapters
                           .asMap()
                           .entries
-                          .map((entry) => _buildChapterItem(
-                                context,
-                                entry.value,
-                                entry.key,
-                                path,
-                              ))
+                          .map(
+                            (entry) => _buildChapterItem(
+                              context,
+                              entry.value,
+                              entry.key,
+                              path,
+                            ),
+                          )
                           .toList(),
                     ),
                   );
@@ -138,16 +143,10 @@ class ChaptersPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => CreateChapterPage(
-              path: path,
-            ),
-          ),
+          MaterialPageRoute(builder: (_) => CreateChapterPage(path: path)),
         ),
         backgroundColor: Colors.blue.shade500,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 4,
         child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
@@ -155,7 +154,11 @@ class ChaptersPage extends StatelessWidget {
   }
 
   Widget _buildChapterItem(
-      BuildContext context, ChapterModel chapter, int index, String path) {
+    BuildContext context,
+    ChapterModel chapter,
+    int index,
+    String path,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -232,11 +235,12 @@ class ChaptersPage extends StatelessWidget {
                   Align(
                     alignment: Alignment.topRight,
                     child: Container(
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30).r),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30).r,
+                      ),
                       child: Text(
                         chapter.id,
                         style: const TextStyle(
@@ -246,7 +250,7 @@ class ChaptersPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               // Chapter Title
@@ -256,6 +260,7 @@ class ChaptersPage extends StatelessWidget {
                   chapter.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
+                    fontSize: 20,
                     color: Colors.black87,
                   ),
                 ),
@@ -269,10 +274,13 @@ class ChaptersPage extends StatelessWidget {
 }
 
 void _showChapterOptions(
-    BuildContext context, ChapterModel chapter, String path) {
+  BuildContext context,
+  ChapterModel chapter,
+  String path,
+) {
   showModalBottomSheet(
     context: context,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (context) {
@@ -290,10 +298,8 @@ void _showChapterOptions(
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => EditChapterPage(
-                        chapter: chapter,
-                        path: path,
-                      ),
+                      builder: (_) =>
+                          EditChapterPage(chapter: chapter, path: path),
                     ),
                   );
                 },
@@ -328,9 +334,9 @@ void _confirmDelete(BuildContext context, String chapterId, String path) {
         TextButton(
           onPressed: () {
             Navigator.pop(context);
-            context
-                .read<LibraryBloc>()
-                .add(DeleteChapterEvent(chapterId, path));
+            context.read<LibraryBloc>().add(
+              DeleteChapterEvent(chapterId, path),
+            );
           },
           child: const Text('O‘chirish', style: TextStyle(color: Colors.red)),
         ),

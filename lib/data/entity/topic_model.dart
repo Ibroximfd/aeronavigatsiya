@@ -2,15 +2,17 @@ class TopicModel {
   final String id;
   final String title;
   final String imageUrl;
-  final String content;
-  final DateTime? createdAt;
+  final String content; // HTML content from document
+  final String documentUrl; // URL of the original document (optional)
+  final DateTime createdAt;
 
   TopicModel({
     required this.id,
     required this.title,
     required this.imageUrl,
     required this.content,
-    this.createdAt,
+    required this.documentUrl,
+    required this.createdAt,
   });
 
   factory TopicModel.fromJson(Map<String, dynamic> json, {required String id}) {
@@ -19,22 +21,27 @@ class TopicModel {
       title: json['title'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
       content: json['content'] ?? '',
-      createdAt: null,
+      documentUrl: json['documentUrl'] ?? '',
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'imageUrl': imageUrl,
-        'content': content,
-      };
+    'title': title,
+    'imageUrl': imageUrl,
+    'content': content,
+    'documentUrl': documentUrl,
+    'createdAt': createdAt.toIso8601String(),
+  };
 
-  // ✅ copyWith qo'shildi
   TopicModel copyWith({
     String? id,
     String? title,
     String? imageUrl,
     String? content,
+    String? documentUrl,
     DateTime? createdAt,
   }) {
     return TopicModel(
@@ -42,6 +49,7 @@ class TopicModel {
       title: title ?? this.title,
       imageUrl: imageUrl ?? this.imageUrl,
       content: content ?? this.content,
+      documentUrl: documentUrl ?? this.documentUrl,
       createdAt: createdAt ?? this.createdAt,
     );
   }

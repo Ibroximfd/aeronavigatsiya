@@ -1,32 +1,25 @@
-import 'dart:convert';
-
 import 'package:aeronavigatsiya/presentation/teachers/bloc/topic_detail/bloc/topicdetail_event.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/topic_detail/bloc/topicdetail_state.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 
 class TopicDetailBloc extends Bloc<TopicDetailEvent, TopicDetailState> {
   TopicDetailBloc() : super(TopicDetailLoading()) {
     on<LoadTopicDetail>(_onLoadTopicDetail);
   }
 
-  void _onLoadTopicDetail(
+  Future<void> _onLoadTopicDetail(
     LoadTopicDetail event,
     Emitter<TopicDetailState> emit,
-  ) {
+  ) async {
+    emit(TopicDetailLoading());
     try {
-      final contentJson = jsonDecode(event.topic.content);
-      final controller = QuillController(
-        document: Document.fromJson(contentJson),
-        selection: const TextSelection.collapsed(offset: 0),
-        readOnly: true,
+      // HTML matnni to‘g‘ridan-to‘g‘ri yuboramiz
+      emit(
+        TopicDetailLoadedHtml(
+          contentHtml: event.topic.content,
+          topic: event.topic,
+        ),
       );
-
-      emit(TopicDetailLoaded(
-        controller: controller,
-        topic: event.topic,
-      ));
     } catch (e) {
       emit(TopicDetailError(message: 'Kontentni yuklashda xatolik: $e'));
     }

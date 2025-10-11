@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:ui';
+
 import 'package:aeronavigatsiya/data/entity/topic_model.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/library/library_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/library/create_topic_page.dart';
@@ -8,6 +10,7 @@ import 'package:aeronavigatsiya/presentation/teachers/screens/library/topic_deta
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TopicListPage extends StatelessWidget {
@@ -35,37 +38,36 @@ class TopicListPage extends StatelessWidget {
             slivers: [
               // Custom SliverAppBar with wave-like bottom
               SliverAppBar(
-                expandedHeight: 80,
                 pinned: true,
+                leading: const BackButton(),
                 backgroundColor: Colors.transparent,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: const Text(
-                    'Mavzular',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 24,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4,
-                          color: Colors.black45,
-                          offset: Offset(1, 1),
-                        ),
-                      ],
-                    ),
+                flexibleSpace: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(24),
                   ),
-                  background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.indigo.shade400,
-                          Colors.indigo.shade600,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: FlexibleSpaceBar(
+                      title: Text(
+                        "Mavzular",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                          letterSpacing: 0.5,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 2,
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
                       ),
-                      borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.elliptical(100, 20),
+                      background: Container(
+                        color: Colors.white.withOpacity(0.15),
                       ),
                     ),
                   ),
@@ -164,11 +166,13 @@ class TopicListPage extends StatelessWidget {
                         children: topics
                             .asMap()
                             .entries
-                            .map((entry) => _buildTopicItem(
-                                  context,
-                                  entry.value,
-                                  entry.key,
-                                ))
+                            .map(
+                              (entry) => _buildTopicItem(
+                                context,
+                                entry.value,
+                                entry.key,
+                              ),
+                            )
                             .toList(),
                       ),
                     );
@@ -221,10 +225,7 @@ class TopicListPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Colors.indigo.shade200,
-                  width: 1.5,
-                ),
+                border: Border.all(color: Colors.indigo.shade200, width: 1.5),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.indigo.shade100.withOpacity(0.4),
@@ -266,18 +267,20 @@ class TopicListPage extends StatelessWidget {
                               fit: BoxFit.cover,
                               loadingBuilder:
                                   (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade200,
-                                  highlightColor: Colors.indigo.shade100,
-                                  period: const Duration(milliseconds: 1200),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 200,
-                                    color: Colors.grey.shade200,
-                                  ),
-                                );
-                              },
+                                    if (loadingProgress == null) return child;
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade200,
+                                      highlightColor: Colors.indigo.shade100,
+                                      period: const Duration(
+                                        milliseconds: 1200,
+                                      ),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 200,
+                                        color: Colors.grey.shade200,
+                                      ),
+                                    );
+                                  },
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   width: double.infinity,
@@ -338,7 +341,11 @@ class TopicListPage extends StatelessWidget {
 }
 
 void _showTopicOptions(
-    BuildContext context, TopicModel topic, String chapterId, String path) {
+  BuildContext context,
+  TopicModel topic,
+  String chapterId,
+  String path,
+) {
   showModalBottomSheet(
     context: context,
     shape: const RoundedRectangleBorder(
@@ -377,8 +384,9 @@ void _showTopicOptions(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                 ),
                 child: const Text(
                   'Mavzu Opsiyalari',
@@ -486,7 +494,11 @@ void _showTopicOptions(
 }
 
 void _confirmDelete(
-    BuildContext context, TopicModel topic, String chapterId, String path) {
+  BuildContext context,
+  TopicModel topic,
+  String chapterId,
+  String path,
+) {
   showDialog(
     context: context,
     builder: (ctx) => TweenAnimationBuilder(
@@ -502,10 +514,7 @@ void _confirmDelete(
               backgroundColor: Colors.white.withOpacity(0.95),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                side: BorderSide(
-                  color: Colors.blueGrey.shade200,
-                  width: 1.5,
-                ),
+                side: BorderSide(color: Colors.blueGrey.shade200, width: 1.5),
               ),
               elevation: 8,
               title: const Text(
@@ -518,10 +527,7 @@ void _confirmDelete(
               ),
               content: const Text(
                 "Rostdan ham ushbu mavzuni o‘chirmoqchimisiz?",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
               actions: [
                 TextButton(
@@ -554,11 +560,13 @@ void _confirmDelete(
                 TextButton(
                   onPressed: () {
                     Navigator.pop(ctx); // Dialogni yopamiz
-                    context.read<LibraryBloc>().add(DeleteTopicEvent(
-                          path: path,
-                          chapterId: chapterId,
-                          topicId: topic.id,
-                        ));
+                    context.read<LibraryBloc>().add(
+                      DeleteTopicEvent(
+                        path: path,
+                        chapterId: chapterId,
+                        topicId: topic.id,
+                      ),
+                    );
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(

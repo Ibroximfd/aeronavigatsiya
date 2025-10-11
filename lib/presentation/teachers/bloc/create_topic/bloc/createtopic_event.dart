@@ -1,14 +1,6 @@
 import 'package:aeronavigatsiya/data/entity/topic_model.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class CreateTopicEvent extends Equatable {
-  const CreateTopicEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class PickImageEvent extends CreateTopicEvent {}
+class CreateTopicEvent {}
 
 class CreateTopic extends CreateTopicEvent {
   final String chapterId;

@@ -5,7 +5,7 @@ abstract class TopicDetailEvent extends Equatable {
   const TopicDetailEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadTopicDetail extends TopicDetailEvent {
@@ -14,5 +14,5 @@ class LoadTopicDetail extends TopicDetailEvent {
   const LoadTopicDetail(this.topic);
 
   @override
-  List<Object> get props => [topic];
+  List<Object?> get props => [topic];
 }

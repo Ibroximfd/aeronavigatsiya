@@ -1,34 +1,13 @@
-import 'package:equatable/equatable.dart';
+class CreateTopicState {}
 
-abstract class CreateTopicState extends Equatable {
-  const CreateTopicState();
+class CreateInitial extends CreateTopicState {}
 
-  @override
-  List<Object?> get props => [];
-}
+class CreateSubmitting extends CreateTopicState {}
 
-class CreateTopicInitial extends CreateTopicState {}
+class CreateSuccess extends CreateTopicState {}
 
-class CreateTopicImagePicking extends CreateTopicState {}
-
-class CreateTopicImagePicked extends CreateTopicState {
-  final String imageUrl;
-
-  const CreateTopicImagePicked({required this.imageUrl});
-
-  @override
-  List<Object?> get props => [imageUrl];
-}
-
-class CreateTopicSubmitting extends CreateTopicState {}
-
-class CreateTopicSuccess extends CreateTopicState {}
-
-class CreateTopicFailure extends CreateTopicState {
+class CreateFailure extends CreateTopicState {
   final String message;
 
-  const CreateTopicFailure({required this.message});
-
-  @override
-  List<Object?> get props => [message];
+  CreateFailure(this.message);
 }
