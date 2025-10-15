@@ -105,6 +105,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.4"
+  chewie:
+    dependency: transitive
+    description:
+      name: chewie
+      sha256: "44bcfc5f0dfd1de290c87c9d86a61308b3282a70b63435d5557cfd60f54a69ca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.13.0"
+  chewie_audio:
+    dependency: transitive
+    description:
+      name: chewie_audio
+      sha256: "73948a8b9841d050433af3498a1f8b11320bd5a2cd70b449bdbe16d4405e97c5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.0"
   cli_util:
     dependency: transitive
     description:
@@ -446,6 +462,62 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  flutter_html_all:
+    dependency: "direct main"
+    description:
+      name: flutter_html_all
+      sha256: "9d7347c25b270aa110dddbbe1dda6eb1e5a8d58c2042b5029e9aaa495e7b786f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_html_audio:
+    dependency: transitive
+    description:
+      name: flutter_html_audio
+      sha256: eb7bd2afee8f93b33fe8fe2fded55c4ff261ebca797e35dbbfc322aa4428b6da
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_html_iframe:
+    dependency: transitive
+    description:
+      name: flutter_html_iframe
+      sha256: "6da7a76853e1c0a5e0cd5a91236cad842c0d17056a439f966879f485ae0e2ffa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_html_math:
+    dependency: transitive
+    description:
+      name: flutter_html_math
+      sha256: a0170144034b3ddf5b5dbecfeebcd24f24b7b52f9db89283dfdac1fd0e04a2f0
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_html_svg:
+    dependency: transitive
+    description:
+      name: flutter_html_svg
+      sha256: "76f59c238571333d95271817c3d94688b3c4dca2735552e481e49039d3efdb13"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_html_table:
+    dependency: "direct main"
+    description:
+      name: flutter_html_table
+      sha256: de15300b1f6d8014e1702e7edfdf3411f362c8fb753e89bac4c99215ea94a4d8
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_html_video:
+    dependency: transitive
+    description:
+      name: flutter_html_video
+      sha256: "558bca17a8a8e758e5cc14d4071fc356ecd141934e412e6b2d0b6cb1009b3332"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   flutter_inappwebview:
     dependency: transitive
     description:
@@ -558,6 +630,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.14.4"
+  flutter_layout_grid:
+    dependency: transitive
+    description:
+      name: flutter_layout_grid
+      sha256: "739e568db97af031d528dfd8a80d333df0e5a310a126e087690fa42cd61dfb5f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.8"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -571,6 +651,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_math_fork:
+    dependency: transitive
+    description:
+      name: flutter_math_fork
+      sha256: "6d5f2f1aa57ae539ffb0a04bb39d2da67af74601d685a161aff7ce5bda5fa407"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.4"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -611,6 +699,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.3"
+  flutter_svg:
+    dependency: transitive
+    description:
+      name: flutter_svg
+      sha256: b9c2ad5872518a27507ab432d1fb97e8813b05f0fc693f9d40fad06d073e0678
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -861,6 +957,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  package_info_plus:
+    dependency: transitive
+    description:
+      name: package_info_plus
+      sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.0"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      sha256: "202a487f08836a592a6bd4f901ac69b3a8f146af552bbd14407b6b41e1c3f086"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   path:
     dependency: transitive
     description:
@@ -869,6 +981,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      sha256: "883402936929eac138ee0a45da5b0f2c80f89913e6dc3bf77eb65b84b409c6ca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   path_provider:
     dependency: transitive
     description:
@@ -1234,6 +1354,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.6"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:
@@ -1314,6 +1442,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.1"
+  vector_graphics:
+    dependency: transitive
+    description:
+      name: vector_graphics
+      sha256: a4f059dc26fc8295b5921376600a194c4ec7d55e72f2fe4c7d2831e103d461e6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.19"
+  vector_graphics_codec:
+    dependency: transitive
+    description:
+      name: vector_graphics_codec
+      sha256: "99fd9fbd34d9f9a32efd7b6a6aae14125d8237b10403b422a6a6dfeac2806146"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.13"
+  vector_graphics_compiler:
+    dependency: transitive
+    description:
+      name: vector_graphics_compiler
+      sha256: d354a7ec6931e6047785f4db12a1f61ec3d43b207fc0790f863818543f8ff0dc
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.19"
   vector_math:
     dependency: transitive
     description:
@@ -1370,6 +1522,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.0.2"
+  wakelock_plus:
+    dependency: transitive
+    description:
+      name: wakelock_plus
+      sha256: "9296d40c9adbedaba95d1e704f4e0b434be446e2792948d0e4aa977048104228"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
+  wakelock_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: wakelock_plus_platform_interface
+      sha256: "036deb14cd62f558ca3b73006d52ce049fabcdcb2eddfe0bf0fe4e8a943b5cf2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   web:
     dependency: transitive
     description:
@@ -1378,6 +1546,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  webview_flutter:
+    dependency: transitive
+    description:
+      name: webview_flutter
+      sha256: c3e4fe614b1c814950ad07186007eff2f2e5dd2935eba7b9a9a1af8e5885f1ba
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.13.0"
+  webview_flutter_android:
+    dependency: transitive
+    description:
+      name: webview_flutter_android
+      sha256: e5201c620eb2637dca88a756961fae4a7191bb30b4f2271e08b746405ffdf3fd
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.10.5"
+  webview_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: webview_flutter_platform_interface
+      sha256: "63d26ee3aca7256a83ccb576a50272edd7cfc80573a4305caa98985feb493ee0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.14.0"
+  webview_flutter_wkwebview:
+    dependency: transitive
+    description:
+      name: webview_flutter_wkwebview
+      sha256: fea63576b3b7e02b2df8b78ba92b48ed66caec2bb041e9a0b1cbd586d5d80bfd
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.23.1"
   win32:
     dependency: transitive
     description:

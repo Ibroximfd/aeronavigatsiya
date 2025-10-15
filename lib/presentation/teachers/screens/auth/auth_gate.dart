@@ -39,12 +39,12 @@ class AuthGate extends StatelessWidget {
 
               final role = roleSnapshot.data ?? "student";
 
-              if (role == "teacher") {
+              if (role == "teacher" || role == "super_teacher") {
                 return const TeacherMainPage();
               } else if (role == "student") {
                 return const StudentMainPage();
               } else {
-                return WaitVerificationPage();
+                return const WaitVerificationPage();
               }
             },
           );

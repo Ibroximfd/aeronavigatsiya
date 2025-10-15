@@ -4,10 +4,12 @@ import 'package:uuid/uuid.dart';
 
 class StorageService {
   static final FirebaseStorage _storage = FirebaseStorage.instance;
-  static final Uuid _uuid = const Uuid();
+  static const Uuid _uuid = Uuid();
 
-  static Future<String> uploadFile(File file,
-      {required String folderName}) async {
+  static Future<String> uploadFile(
+    File file, {
+    required String folderName,
+  }) async {
     try {
       final fileId = _uuid.v4(); // unique ID
       final ref = _storage.ref().child('$folderName/$fileId');

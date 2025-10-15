@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:aeronavigatsiya/core/services/auth_service.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_event.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_state.dart';
@@ -179,6 +180,14 @@ class StudentDrawer extends StatelessWidget {
                           ),
 
                           const Spacer(),
+
+                          _buildListTile(
+                            context,
+                            icon: Icons.person,
+                            title: AuthService.currentUser!.email ?? "",
+                            iconColor: Colors.blueGrey,
+                            onTap: () {},
+                          ),
 
                           // Logout
                           _buildListTile(

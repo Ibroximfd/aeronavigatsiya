@@ -235,7 +235,7 @@ class _StudentVideosViewState extends State<_StudentVideosView>
     final thumbnailUrl = _getThumbnailUrl(video.videoUrl);
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: 1),
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       builder: (context, double value, child) {
         return Transform.translate(
           offset: Offset(20 * (1 - value), 0),

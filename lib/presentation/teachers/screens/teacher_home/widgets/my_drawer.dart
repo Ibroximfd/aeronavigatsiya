@@ -1,9 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:aeronavigatsiya/core/services/auth_service.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_event.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_state.dart';
 import 'package:aeronavigatsiya/presentation/teachers/screens/auth/auth_gate.dart';
+import 'package:aeronavigatsiya/presentation/teachers/screens/super_teacher_page/super_teacher_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -127,6 +129,27 @@ class MyDrawer extends StatelessWidget {
 
                           const Spacer(),
 
+                          _buildListTile(
+                            context,
+                            icon: Icons.admin_panel_settings,
+                            title: "Admin Panel",
+                            iconColor: Colors.grey,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const SuperTeacherPanelPage(),
+                              ),
+                            ),
+                          ),
+
+                          _buildListTile(
+                            context,
+                            icon: Icons.person,
+                            title: AuthService.currentUser!.email ?? "",
+                            iconColor: Colors.blueGrey,
+                            onTap: () {},
+                          ),
+
                           // Logout tile
                           _buildListTile(
                             context,
@@ -163,7 +186,10 @@ class MyDrawer extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text("Ha, chiqish", style: TextStyle(color: Colors.white)),
+            child: const Text(
+              "Ha, chiqish",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () => Navigator.pop(context, true),
           ),
         ],
@@ -186,12 +212,12 @@ class MyDrawer extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            child: Text("Bekor qilish"),
+            child: const Text("Bekor qilish"),
             onPressed: () => Navigator.pop(context, false),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text(
+            child: const Text(
               "Ha, o‘chirilsin",
               style: TextStyle(color: Colors.white),
             ),

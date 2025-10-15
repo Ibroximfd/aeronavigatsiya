@@ -4,20 +4,22 @@ import 'dart:io';
 import 'package:aeronavigatsiya/data/entity/topic_model.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/edit_topic/bloc/edittopic_event.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/edit_topic/bloc/edittopic_state.dart';
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditTopicBloc extends Bloc<EditTopicEvent, EditTopicState> {
   EditTopicBloc(TopicModel topic)
-      : super(EditTopicState(
+    : super(
+        EditTopicState(
           title: topic.title,
           content: Document.fromJson(jsonDecode(topic.content)),
           imageUrl: topic.imageUrl,
           topic: topic,
-        )) {
+        ),
+      ) {
     on<ChangeTitleEvent>((event, emit) {
       emit(state.copyWith(title: event.title));
     });
@@ -32,14 +34,17 @@ class EditTopicBloc extends Bloc<EditTopicEvent, EditTopicState> {
   }
 
   Future<void> _onPickNewImage(
-      PickNewImageEvent event, Emitter<EditTopicState> emit) async {
+    PickNewImageEvent event,
+    Emitter<EditTopicState> emit,
+  ) async {
     emit(state.copyWith(isLoadingImage: true));
     try {
       final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (picked != null) {
         final file = File(picked.path);
         final ref = FirebaseStorage.instance.ref().child(
-            'topic_covers/${state.topic.id}_${DateTime.now().millisecondsSinceEpoch}');
+          'topic_covers/${state.topic.id}_${DateTime.now().millisecondsSinceEpoch}',
+        );
         await ref.putFile(file);
         final url = await ref.getDownloadURL();
         emit(state.copyWith(imageUrl: url, isLoadingImage: false));
@@ -52,7 +57,9 @@ class EditTopicBloc extends Bloc<EditTopicEvent, EditTopicState> {
   }
 
   Future<void> _onSubmitUpdate(
-      SubmitUpdateEvent event, Emitter<EditTopicState> emit) async {
+    SubmitUpdateEvent event,
+    Emitter<EditTopicState> emit,
+  ) async {
     emit(state.copyWith(isSubmitting: true));
     try {
       final updatedTopic = state.topic.copyWith(

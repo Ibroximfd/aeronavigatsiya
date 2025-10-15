@@ -28,7 +28,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
     on<UpdateChapterEvent>(_onUpdateChapter);
   }
   Future<void> _onCreateChapter(
-      CreateChapterEvent event, Emitter<LibraryState> emit) async {
+    CreateChapterEvent event,
+    Emitter<LibraryState> emit,
+  ) async {
     emit(LibraryLoading());
     try {
       await repository.createChapter(event.chapter, event.path);
@@ -39,7 +41,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   }
 
   Future<void> _onPickChapterImage(
-      PickChapterImageEvent event, Emitter<LibraryState> emit) async {
+    PickChapterImageEvent event,
+    Emitter<LibraryState> emit,
+  ) async {
     emit(LibraryImagePicking());
     try {
       final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -49,8 +53,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       }
       final file = File(picked.path);
       final fileName = const Uuid().v4();
-      final ref =
-          FirebaseStorage.instance.ref().child('chapter_covers/$fileName');
+      final ref = FirebaseStorage.instance.ref().child(
+        'chapter_covers/$fileName',
+      );
       await ref.putFile(file);
       final url = await ref.getDownloadURL();
       emit(LibraryImagePicked(url));
@@ -60,7 +65,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   }
 
   Future<void> _onUpdateTopic(
-      UpdateTopicEvent event, Emitter<LibraryState> emit) async {
+    UpdateTopicEvent event,
+    Emitter<LibraryState> emit,
+  ) async {
     emit(LibraryLoading());
     try {
       await FirebaseFirestore.instance
@@ -76,7 +83,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   }
 
   Future<void> _onDeleteTopic(
-      DeleteTopicEvent event, Emitter<LibraryState> emit) async {
+    DeleteTopicEvent event,
+    Emitter<LibraryState> emit,
+  ) async {
     emit(LibraryLoading());
     try {
       final topicDoc = await firestore
@@ -114,7 +123,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   }
 
   Future<void> _onFetchChapters(
-      FetchChaptersEvent event, Emitter<LibraryState> emit) async {
+    FetchChaptersEvent event,
+    Emitter<LibraryState> emit,
+  ) async {
     try {
       emit(LibraryLoading());
       final snapshot = await firestore.collection(event.path).get();
@@ -128,11 +139,15 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   }
 
   Future<void> _onDeleteChapter(
-      DeleteChapterEvent event, Emitter<LibraryState> emit) async {
+    DeleteChapterEvent event,
+    Emitter<LibraryState> emit,
+  ) async {
     emit(LibraryLoading());
     try {
-      final chapterDoc =
-          await firestore.collection(event.path).doc(event.chapterId).get();
+      final chapterDoc = await firestore
+          .collection(event.path)
+          .doc(event.chapterId)
+          .get();
 
       if (chapterDoc.exists) {
         final data = chapterDoc.data();
@@ -158,7 +173,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   }
 
   Future<void> _onUpdateChapter(
-      UpdateChapterEvent event, Emitter<LibraryState> emit) async {
+    UpdateChapterEvent event,
+    Emitter<LibraryState> emit,
+  ) async {
     emit(LibraryLoading());
     try {
       await firestore

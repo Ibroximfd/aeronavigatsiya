@@ -36,15 +36,15 @@ class AKTLibraryImagePicked extends AKTLibraryState {
 
 class AKTLibraryLoaded extends AKTLibraryState {
   final List<ChapterModel> chapters;
-  AKTLibraryLoaded(this.chapters);
+  const AKTLibraryLoaded(this.chapters);
 }
 
 class AKTLibraryError extends AKTLibraryState {
   final String error;
-  AKTLibraryError(this.error);
+  const AKTLibraryError(this.error);
 }
 
 class AKTLibraryActionSuccess extends AKTLibraryState {
   final String message;
-  AKTLibraryActionSuccess(this.message);
+  const AKTLibraryActionSuccess(this.message);
 }
