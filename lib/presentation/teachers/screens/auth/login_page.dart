@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:aeronavigatsiya/core/widgets/custom_textfield.dart';
 import 'package:aeronavigatsiya/presentation/students/student_home/student_home_page.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/auth/auth_bloc.dart';
@@ -22,246 +20,316 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final resetEmailController = TextEditingController();
   bool _isPasswordVisible = false;
+
+  void _showResetPasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Parolni tiklash",
+          style: GoogleFonts.roboto(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.teal.shade900,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Emailingizni kiriting, parolni tiklash havolasi yuboriladi.",
+              style: GoogleFonts.roboto(
+                fontSize: 16,
+                color: Colors.grey.shade700,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.teal.shade200, width: 1),
+              ),
+              child: CostumTextField(
+                height: 50,
+                controller: resetEmailController,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "Bekor qilish",
+              style: GoogleFonts.roboto(color: Colors.grey.shade700),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal.shade600,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              final email = resetEmailController.text.trim();
+              if (email.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text("Email manzilini kiriting."),
+                    backgroundColor: Colors.red.shade400,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                return;
+              }
+
+              context.read<AuthBloc>().add(ResetPasswordRequested(email));
+
+              Navigator.pop(context);
+            },
+            child: Text(
+              "Yuborish",
+              style: GoogleFonts.roboto(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
-        child: Stack(
-          children: [
-            CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: BlocConsumer<AuthBloc, AuthState>(
-                      listener: (context, state) {
-                        if (state is AuthSuccess) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text("Muvaffaqiyatli kirish"),
-                              backgroundColor: Colors.teal.shade600,
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          );
-
-                          // === Role-based navigatsiya ===
-                          if (state.role == 'teacher') {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TeacherHomePage(),
-                              ),
-                              (_) => false,
-                            );
-                          } else {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const StudentHomePage(),
-                              ),
-                              (_) => false,
-                            );
-                          }
-                        } else if (state is AuthFailure) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.message),
-                              backgroundColor: Colors.red.shade400,
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      builder: (context, state) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 80),
-                            Center(
-                              child: Text(
-                                "Xush kelibsiz!",
-                                style: GoogleFonts.roboto(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.teal.shade900,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Center(
-                              child: Text(
-                                "Tizimga kirish",
-                                style: GoogleFonts.roboto(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey.shade700,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 48),
-
-                            /// Email field
-                            Text(
-                              "Email",
-                              style: GoogleFonts.roboto(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.teal.shade900,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.teal.shade200,
-                                  width: 1,
-                                ),
-                              ),
-                              child: CostumTextField(
-                                height: 50,
-                                controller: emailController,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-
-                            /// Password field
-                            Text(
-                              "Parol",
-                              style: GoogleFonts.roboto(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.teal.shade900,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.teal.shade200,
-                                  width: 1,
-                                ),
-                              ),
-                              child: CostumTextField(
-                                height: 50,
-                                controller: passwordController,
-                                obscureText: !_isPasswordVisible,
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isPasswordVisible
-                                        ? CupertinoIcons.eye_slash
-                                        : CupertinoIcons.eye,
-                                    color: Colors.teal.shade600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 14),
-
-                            /// Forgot password
-                            Align(
-                              alignment: Alignment.center,
-                              child: TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Parolni unutdingizmi?",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 16,
-                                    color: Colors.teal.shade700,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Colors.teal.shade700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 14),
-
-                            /// Register link
-                            Align(
-                              alignment: Alignment.center,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => RegisterPage(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  "Ro'yxatdan o'tish?",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 16,
-                                    color: Colors.teal.shade700,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Colors.teal.shade700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-
-                            /// Login button
-                            Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.teal.shade600,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: CupertinoButton(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(12),
-                                onPressed: () {
-                                  context.read<AuthBloc>().add(
-                                    LoginRequested(
-                                      emailController.text.trim(),
-                                      passwordController.text.trim(),
-                                    ),
-                                  );
-                                },
-                                child: state is AuthLoading
-                                    ? const CupertinoActivityIndicator(
-                                        color: Colors.white,
-                                        radius: 12,
-                                      )
-                                    : Text(
-                                        "Kirish",
-                                        style: GoogleFonts.roboto(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                              ),
-                            ),
-                            const SizedBox(height: 40),
-                          ],
-                        );
-                      },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text("Muvaffaqiyatli kirish"),
+                    backgroundColor: Colors.teal.shade600,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                );
+
+                if (state.role == 'teacher') {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TeacherHomePage(),
+                    ),
+                    (_) => false,
+                  );
+                } else {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StudentHomePage(),
+                    ),
+                    (_) => false,
+                  );
+                }
+              } else if (state is AuthFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red.shade400,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                );
+              } else if (state is AuthPasswordReset) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.teal.shade600,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 80),
+                  Center(
+                    child: Text(
+                      "Xush kelibsiz!",
+                      style: GoogleFonts.roboto(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.teal.shade900,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: Text(
+                      "Tizimga kirish",
+                      style: GoogleFonts.roboto(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+
+                  Text(
+                    "Email",
+                    style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.teal.shade900,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.teal.shade200, width: 1),
+                    ),
+                    child: CostumTextField(
+                      height: 50,
+                      controller: emailController,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  Text(
+                    "Parol",
+                    style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.teal.shade900,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.teal.shade200, width: 1),
+                    ),
+                    child: CostumTextField(
+                      height: 50,
+                      controller: passwordController,
+                      obscureText: !_isPasswordVisible,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? CupertinoIcons.eye_slash
+                              : CupertinoIcons.eye,
+                          color: Colors.teal.shade600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      onPressed: _showResetPasswordDialog,
+                      child: Text(
+                        "Parolni unutdingizmi?",
+                        style: GoogleFonts.roboto(
+                          fontSize: 16,
+                          color: Colors.teal.shade700,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.teal.shade700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Ro'yxatdan o'tish?",
+                        style: GoogleFonts.roboto(
+                          fontSize: 16,
+                          color: Colors.teal.shade700,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.teal.shade700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  Container(
+                    height: 60,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.teal.shade600,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: CupertinoButton(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                      onPressed: () {
+                        context.read<AuthBloc>().add(
+                          LoginRequested(
+                            emailController.text.trim(),
+                            passwordController.text.trim(),
+                          ),
+                        );
+                      },
+                      child: state is AuthLoading
+                          ? const CupertinoActivityIndicator(
+                              color: Colors.white,
+                              radius: 12,
+                            )
+                          : Text(
+                              "Kirish",
+                              style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

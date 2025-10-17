@@ -37,4 +37,9 @@ class AuthFailure extends AuthState {
 
 class AuthLoggedOut extends AuthState {}
 
+class AuthPasswordReset extends AuthState {
+  final String message;
+  const AuthPasswordReset(this.message);
+}
+
 class AuthDeleted extends AuthState {}

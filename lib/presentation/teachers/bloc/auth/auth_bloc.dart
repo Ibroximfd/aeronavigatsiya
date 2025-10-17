@@ -8,6 +8,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequested>(_onLoginRequested);
     on<RegisterRequested>(_onRegisterRequested);
     on<LogOutEvent>(_onLogOutEvent);
+    on<ResetPasswordRequested>(_onResetPasswordRequested);
     on<DeleteAccountEvent>(_onDeleteAccountEvent);
   }
 
@@ -79,17 +80,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  // === DELETE ACCOUNT ===
-  Future<void> _onDeleteAccountEvent(
-    DeleteAccountEvent event,
+  Future<void> _onResetPasswordRequested(
+    ResetPasswordRequested event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
     try {
-      await AuthService.deleteAccount();
-      emit(AuthDeleted());
+      await AuthService.resetPassword(event.email);
+      emit(
+        const AuthPasswordReset(
+          "Parolni tiklash havolasi emailingizga yuborildi.",
+        ),
+      );
     } catch (e) {
-      emit(AuthFailure("Akkountni o‘chirishda xatolik: $e"));
+      emit(AuthFailure(e.toString()));
     }
+  }
+}
+
+// === DELETE ACCOUNT ===
+Future<void> _onDeleteAccountEvent(
+  DeleteAccountEvent event,
+  Emitter<AuthState> emit,
+) async {
+  emit(AuthLoading());
+  try {
+    await AuthService.deleteAccount();
+    emit(AuthDeleted());
+  } catch (e) {
+    emit(AuthFailure("Akkountni o‘chirishda xatolik: $e"));
   }
 }

@@ -36,4 +36,9 @@ class RegisterRequested extends AuthEvent {
 
 class LogOutEvent extends AuthEvent {}
 
+class ResetPasswordRequested extends AuthEvent {
+  final String email;
+  const ResetPasswordRequested(this.email);
+}
+
 class DeleteAccountEvent extends AuthEvent {}

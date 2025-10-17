@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -103,6 +105,39 @@ final class AuthService {
       }
     } catch (e) {
       throw "Akkountni o‘chirishda xatolik: $e";
+    }
+  }
+
+  static Future<void> resetPassword(String email) async {
+    try {
+      if (email.isEmpty) {
+        throw "Iltimos, emailingizni kiriting.";
+      }
+
+      // Email formatini tekshirish (oddiy regex bilan)
+      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+      if (!emailRegex.hasMatch(email)) {
+        throw "Noto‘g‘ri email manzil kiritildi.";
+      }
+
+      print("Sending password reset email to: $email");
+      await _auth.sendPasswordResetEmail(email: email);
+      print("Password reset email sent successfully");
+    } on FirebaseAuthException catch (e) {
+      print("FirebaseAuthException: ${e.code} - ${e.message}");
+      switch (e.code) {
+        case 'invalid-email':
+          throw "Email manzilingiz noto‘g‘ri formatda.";
+        case 'user-not-found':
+          throw "Bu email bilan foydalanuvchi topilmadi.";
+        case 'missing-email':
+          throw "Email manzili kiritilmadi.";
+        default:
+          throw "Parolni tiklashda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.";
+      }
+    } catch (e) {
+      print("Error: $e");
+      throw e.toString();
     }
   }
 
