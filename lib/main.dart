@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +22,67 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    // 2 soniya kutib update tekshirish
+    Future.delayed(const Duration(seconds: 2), () {
+      _checkForUpdate();
+    });
+  }
+
+  Future<void> _checkForUpdate() async {
+    try {
+      AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        if (mounted) {
+          _showUpdateDialog(updateInfo);
+        }
+      }
+    } catch (e) {
+      debugPrint('Update check error: $e');
+    }
+  }
+
+  void _showUpdateDialog(AppUpdateInfo updateInfo) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: const Text('🎉 Yangilanish mavjud!'),
+        content: const Text(
+          'Ilovaning yangi versiyasi chiqdi.\nYangi funksiyalar va tuzatishlar mavjud.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Keyinroq'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              if (updateInfo.immediateUpdateAllowed) {
+                await InAppUpdate.performImmediateUpdate();
+              } else if (updateInfo.flexibleUpdateAllowed) {
+                await InAppUpdate.startFlexibleUpdate();
+                await InAppUpdate.completeFlexibleUpdate();
+              }
+            },
+            child: const Text('Yangilash'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +118,7 @@ class MyApp extends StatelessWidget {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
-              quill.FlutterQuillLocalizations.delegate, // 👉 MUHIM QATOR
+              quill.FlutterQuillLocalizations.delegate,
             ],
             home: const SplashPage(),
           );
