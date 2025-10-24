@@ -153,7 +153,6 @@ class StudentTopicListPage extends StatelessWidget {
                       );
                     }
 
-                    // Map Firestore data to TopicModel
                     final topics = snapshot.data!.docs.map((doc) {
                       return TopicModel.fromJson(
                         doc.data() as Map<String, dynamic>,
@@ -161,9 +160,8 @@ class StudentTopicListPage extends StatelessWidget {
                       );
                     }).toList();
 
-                    // Build the list of topics
                     return Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(16.r),
                       child: Column(
                         children: topics
                             .asMap()
@@ -181,6 +179,7 @@ class StudentTopicListPage extends StatelessWidget {
                   },
                 ),
               ),
+              const SliverToBoxAdapter(child: SizedBox(height: 34)),
             ],
           ),
         ),

@@ -462,7 +462,7 @@ class CreateTopicPage extends StatelessWidget {
                   id: '',
                   title: createBloc.titleController.text.trim(),
                   imageUrl: (imageState).imageUrl,
-                  content: (docState).htmlContent, // HTML content from document
+                  content: (docState).htmlContent, 
                   documentUrl: (docState).documentUrl,
                   createdAt: DateTime.now(),
                 );

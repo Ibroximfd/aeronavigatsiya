@@ -39,7 +39,11 @@ class TopicListPage extends StatelessWidget {
         ),
       ),
       child: CustomScrollView(
-        slivers: [_buildSliverAppBar(), _buildTopicList()],
+        slivers: [
+          _buildSliverAppBar(),
+          _buildTopicList(),
+          const SliverToBoxAdapter(child: SizedBox(height: 34)),
+        ],
       ),
     );
   }

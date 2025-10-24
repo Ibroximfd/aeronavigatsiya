@@ -4,7 +4,6 @@ import java.io.FileInputStream
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    // Flutter plugin doimo oxirida bo'lishi kerak
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -16,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.aeronavigatsiya"
+    namespace = "com.ibroxim_ku.aeronavigatsiya"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
 
@@ -33,8 +32,8 @@ android {
         applicationId = "com.ibroxim_ku.aeronavigatsiya"
         minSdk = flutter.minSdkVersion
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 5
+        versionName = "1.0.4"
     }
 
     signingConfigs {
@@ -62,3 +61,5 @@ android {
 flutter {
     source = "../.."
 }
+
+apply(plugin = "com.google.gms.google-services")
