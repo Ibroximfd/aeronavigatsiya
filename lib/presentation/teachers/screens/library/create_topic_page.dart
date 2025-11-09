@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:aeronavigatsiya/data/entity/topic_model.dart';
-import 'package:aeronavigatsiya/presentation/teachers/bloc/create_topic/bloc/createtopic_bloc.dart'; // Adjust path if needed
-import 'package:aeronavigatsiya/presentation/teachers/bloc/create_topic/bloc/createtopic_event.dart'; // Adjust
-import 'package:aeronavigatsiya/presentation/teachers/bloc/create_topic/bloc/createtopic_state.dart'; // Adjust
+import 'package:aeronavigatsiya/presentation/teachers/bloc/create_topic/bloc/createtopic_bloc.dart';
+import 'package:aeronavigatsiya/presentation/teachers/bloc/create_topic/bloc/createtopic_event.dart';
+import 'package:aeronavigatsiya/presentation/teachers/bloc/create_topic/bloc/createtopic_state.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/document_picker/bloc/document_picker_bloc.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/document_picker/bloc/document_picker_event.dart';
 import 'package:aeronavigatsiya/presentation/teachers/bloc/document_picker/bloc/document_picker_state.dart';
@@ -79,10 +79,6 @@ class CreateTopicPage extends StatelessWidget {
                           content: Text(state.message),
                           backgroundColor: Colors.red.shade600,
                           behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          duration: const Duration(seconds: 3),
                         ),
                       );
                     }
@@ -96,10 +92,6 @@ class CreateTopicPage extends StatelessWidget {
                           content: Text(state.message),
                           backgroundColor: Colors.red.shade600,
                           behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          duration: const Duration(seconds: 3),
                         ),
                       );
                     }
@@ -119,7 +111,7 @@ class CreateTopicPage extends StatelessWidget {
                                 expandedHeight: 140,
                                 flexibleSpace: FlexibleSpaceBar(
                                   title: const Text(
-                                    "Yangi Mavzu Qo‘shish",
+                                    "Yangi Mavzu Qo'shish",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
@@ -150,27 +142,16 @@ class CreateTopicPage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // Title Input
                                       _buildTitleInput(createBloc, context),
                                       const SizedBox(height: 16),
-
-                                      // Image Picker
                                       _buildImagePicker(context, imageState),
                                       const SizedBox(height: 16),
-
-                                      // Display Selected Image
                                       _buildSelectedImage(imageState),
                                       const SizedBox(height: 16),
-
-                                      // Document Picker
                                       _buildDocumentPicker(context, docState),
                                       const SizedBox(height: 16),
-
-                                      // Display Selected Document
                                       _buildSelectedDocument(docState),
                                       const SizedBox(height: 24),
-
-                                      // Create Button
                                       _buildCreateButton(
                                         context,
                                         createState,
@@ -305,22 +286,23 @@ class CreateTopicPage extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 24,
+            if (imageUrl != null)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 24,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -385,23 +367,35 @@ class CreateTopicPage extends StatelessWidget {
             ),
           ],
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.description, color: Colors.blue, size: 24),
-            SizedBox(width: 8),
+            Icon(_getFileIcon(docState.fileType), color: Colors.blue, size: 24),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Hujjat tanlandi va HTML’ga aylantirildi',
-                style: TextStyle(fontSize: 16, color: Colors.black87),
+                'Hujjat tanlandi (${docState.fileType.toUpperCase()})',
+                style: const TextStyle(fontSize: 16, color: Colors.black87),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            Icon(Icons.check_circle, color: Colors.green, size: 24),
+            const Icon(Icons.check_circle, color: Colors.green, size: 24),
           ],
         ),
       );
     }
     return const SizedBox.shrink();
+  }
+
+  IconData _getFileIcon(String fileType) {
+    switch (fileType.toLowerCase()) {
+      case 'pdf':
+        return Icons.picture_as_pdf;
+      case 'doc':
+      case 'docx':
+        return Icons.description;
+      default:
+        return Icons.insert_drive_file;
+    }
   }
 
   Widget _buildCreateButton(
@@ -445,9 +439,7 @@ class CreateTopicPage extends StatelessWidget {
                 if (imageState is! ImageLoaded || docState is! DocumentLoaded) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: const Text(
-                        'Rasm yoki hujjat tanlanmagan yoki HTML’ga aylantirilmagan!',
-                      ),
+                      content: const Text('Rasm yoki hujjat tanlanmagan!'),
                       backgroundColor: Colors.red.shade600,
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
@@ -461,9 +453,9 @@ class CreateTopicPage extends StatelessWidget {
                 final topic = TopicModel(
                   id: '',
                   title: createBloc.titleController.text.trim(),
-                  imageUrl: (imageState).imageUrl,
-                  content: (docState).htmlContent, 
-                  documentUrl: (docState).documentUrl,
+                  imageUrl: imageState.imageUrl,
+                  documentUrl: docState.documentUrl,
+                  fileType: docState.fileType,
                   createdAt: DateTime.now(),
                 );
 

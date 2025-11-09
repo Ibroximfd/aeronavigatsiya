@@ -2,16 +2,16 @@ class TopicModel {
   final String id;
   final String title;
   final String imageUrl;
-  final String content; // HTML content from document
-  final String documentUrl; // URL of the original document (optional)
+  final String documentUrl; 
+  final String fileType; // 'pdf', 'docx', 'doc'
   final DateTime createdAt;
 
   TopicModel({
     required this.id,
     required this.title,
     required this.imageUrl,
-    required this.content,
     required this.documentUrl,
+    required this.fileType,
     required this.createdAt,
   });
 
@@ -20,8 +20,8 @@ class TopicModel {
       id: id,
       title: json['title'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
-      content: json['content'] ?? '',
       documentUrl: json['documentUrl'] ?? '',
+      fileType: json['fileType'] ?? 'pdf',
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
@@ -31,8 +31,8 @@ class TopicModel {
   Map<String, dynamic> toJson() => {
     'title': title,
     'imageUrl': imageUrl,
-    'content': content,
     'documentUrl': documentUrl,
+    'fileType': fileType,
     'createdAt': createdAt.toIso8601String(),
   };
 
@@ -40,16 +40,16 @@ class TopicModel {
     String? id,
     String? title,
     String? imageUrl,
-    String? content,
     String? documentUrl,
+    String? fileType,
     DateTime? createdAt,
   }) {
     return TopicModel(
       id: id ?? this.id,
       title: title ?? this.title,
       imageUrl: imageUrl ?? this.imageUrl,
-      content: content ?? this.content,
       documentUrl: documentUrl ?? this.documentUrl,
+      fileType: fileType ?? this.fileType,
       createdAt: createdAt ?? this.createdAt,
     );
   }

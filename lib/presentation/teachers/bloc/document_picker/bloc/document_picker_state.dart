@@ -5,10 +5,10 @@ class DocumentInitial extends DocumentPickerState {}
 class DocumentPicking extends DocumentPickerState {}
 
 class DocumentLoaded extends DocumentPickerState {
-  final String htmlContent;
   final String documentUrl;
+  final String fileType; // 'pdf', 'doc', 'docx'
 
-  DocumentLoaded(this.htmlContent, this.documentUrl);
+  DocumentLoaded(this.documentUrl, this.fileType);
 }
 
 class DocumentFailure extends DocumentPickerState {
