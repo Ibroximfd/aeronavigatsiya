@@ -55,14 +55,14 @@ class TopicDetailPage extends StatelessWidget {
         ),
       ),
       body: SfPdfViewer.network(
+        interactionMode: PdfInteractionMode.selection,
+        pageSpacing: 0.0,
         topic.documentUrl,
         controller: _pdfController,
         // Link bosilganda avtomatik ochiladi
         enableHyperlinkNavigation: true,
-        // Zoom imkoniyatlari
-        enableDoubleTapZooming: true,
         // Text selection o'chirilgan (faqat o'qish)
-        enableTextSelection: false,
+        enableTextSelection: true,
         // Scroll ko'rsatkichlari
         canShowScrollHead: true,
         canShowScrollStatus: true,
